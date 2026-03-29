@@ -2,7 +2,7 @@ import React from "react"
 import moment from "moment"
 import { FaLocationDot } from "react-icons/fa6"
 import { FaHeart } from "react-icons/fa"
-
+import BASE_URL from "../config.js"
 const TravelStoryCard = ({
   imageUrl,
   title,
@@ -15,11 +15,13 @@ const TravelStoryCard = ({
   onFavouriteClick,
 }) => {
   console.log(isFavourite)
+  console.log("BASE:", BASE_URL);
+  console.log("IMAGE:", imageUrl);
 
   return (
     <div className="border border-slate-200 rounded-lg overflow-hidden bg-white hover:shadow-lg hover:shadow-slate-200 transition-all ease-in-out relative cursor-pointer">
       <img
-        src={imageUrl}
+        src={`${BASE_URL}/assets/grid${imageUrl}`}
         alt={title}
         className="w-full h-56 object-cover rounded-lg"
         onClick={onClick}
