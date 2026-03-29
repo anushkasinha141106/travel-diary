@@ -121,7 +121,7 @@ export const editTravelStory = async (req, res, next) => {
       next(errorHandler(404, "Travel Story not found!"))
     }
 
-    const placeholderImageUrl = `http://localhost:3000/assets/placeholderImage.png`
+    const placeholderImageUrl = `https://travel-diary-04gc.onrender.com/assets/placeholderImage.png`
 
     travelStory.title = title
     travelStory.story = story
@@ -155,7 +155,7 @@ export const deleteTravelStory = async (req, res, next) => {
     await travelStory.deleteOne({ _id: id, userId: userId })
 
     // Check if the image is not a placeholder before deleting
-    const placeholderImageUrl = `http://localhost:3000/assets/placeholderImage.png`
+    const placeholderImageUrl = `https://travel-diary-04gc.onrender.com/assets/placeholderImage.png`
 
     // Extract the filename from the imageUrl
     const imageUrl = travelStory.imageUrl
