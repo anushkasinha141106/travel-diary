@@ -52,6 +52,7 @@ const SignUp = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault()
+    console.log("Signup form submitted with:", name, email, password)
 
     if (!name) {
       setError("Please enter your name.")
@@ -168,8 +169,8 @@ const SignUp = () => {
       {/* Glassmorphic Login Form in center (pointer-events-none wrapped allows clicking on stuff outside!) */}
       <div className={`absolute z-30 inset-0 flex items-center justify-center pointer-events-none transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${hoveredId !== null ? 'opacity-0 scale-95 blur-sm select-none pointer-events-none' : 'opacity-100 scale-100 blur-0'}`}>
         
-        {/* Actual Form Box (pointer-events-none on parent allows reaching through the glass!) */}
-        <div className="flex flex-col md:flex-row shadow-[0_20px_60px_rgba(0,0,0,0.1)] rounded-3xl overflow-hidden bg-white/20 backdrop-blur-2xl border border-white/50 max-w-[850px] w-[90%] md:w-[75%] h-auto z-50 pointer-events-none mix-blend-luminosity">
+        {/* Actual Form Box (pointer-events-auto makes it interactive) */}
+        <div className="flex flex-col md:flex-row shadow-[0_20px_60px_rgba(0,0,0,0.1)] rounded-3xl overflow-hidden bg-white/20 backdrop-blur-2xl border border-white/50 max-w-[850px] w-[90%] md:w-[75%] h-auto z-50 pointer-events-auto mix-blend-luminosity">
           
           {/* Left Text/Branding Panel (Passes mouse events straight through to the 3D grid!) */}
           <div className="hidden md:flex flex-col justify-center p-12 bg-white/10 w-1/2 relative overflow-hidden backdrop-blur-md border-r border-white/20">
