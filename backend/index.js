@@ -24,8 +24,11 @@ mongoose
 
 const app = express()
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
 // Check if uploads folder exists
-const uploadsDir = path.join(process.cwd(), "uploads");
+const uploadsDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir);
 }
@@ -33,7 +36,7 @@ if (!fs.existsSync(uploadsDir)) {
 // Enable CORS for frontend (Replace with your frontend URL)
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(",") : ["http://localhost:5173"],
+    origin: process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(",") : ["http://localhost:5173", "http://localhost:5174"],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -51,11 +54,8 @@ app.use("/api/auth", authRoutes)
 app.use("/api/user", userRoutes)
 app.use("/api/travel-story", travelStoryRoutes)
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")))
-app.use("/assets", express.static(path.join(process.cwd(), "assets")))
+app.use("/uploads", express.static(path.join(__dirname, "uploads")))
+app.use("/assets", express.static(path.join(__dirname, "assets")))
 
 const frontendPath = path.join(__dirname, "../frontend/dist")
 app.use(express.static(frontendPath))

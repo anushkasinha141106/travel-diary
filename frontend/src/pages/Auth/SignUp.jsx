@@ -7,9 +7,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { motion } from "framer-motion"
 
 const MESH_IMAGES = [
-  "picture_ 1.jpg", "picture_ 2.jpg", "picture_ 3.jpg", "picture_ 4.jpg", "picture_ 5.jpg",
-  "picture_ 6.jpg", "picture_ 7.jpg", "picture_ 8.jpg", "picture_ 9.jpg", "picture_ 10.jpg",
-  "picture_ 11.jpg", "picture_ 12.jpg", "picture_ 13.jpg", "picture_ 14.jpg", "picture_ 15.jpg"
+  "picture_1.jpg", "picture_2.jpg", "picture_3.jpg", "picture_4.jpg", "picture_5.jpg",
+  "picture_6.jpg", "picture_7.jpg", "picture_8.jpg", "picture_9.jpg", "picture_10.jpg",
+  "picture_11.jpg", "picture_12.jpg", "picture_13.jpg", "picture_14.jpg", "picture_15.jpg"
 ];
 
 // Seeded random rotations

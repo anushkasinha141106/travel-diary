@@ -12,8 +12,8 @@ import {
 import { motion } from "framer-motion"
 
 const MESH_IMAGES = [
-  "picture_23.jpg", "picture_24.jpg", "picture_3.jpg", "picture_6.jpg", "picture_5.jpg",
-  "picture_4.jpg", "picture_19.jpg", "picture_20.jpg", "picture_9.jpg", "picture_10.jpg",
+  "picture_1.jpg", "picture_2.jpg", "picture_3.jpg", "picture_4.jpg", "picture_5.jpg",
+  "picture_6.jpg", "picture_7.jpg", "picture_8.jpg", "picture_9.jpg", "picture_10.jpg",
   "picture_11.jpg", "picture_12.jpg", "picture_13.jpg", "picture_14.jpg", "picture_15.jpg"
 ];
 
