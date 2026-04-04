@@ -51,36 +51,31 @@ app.use("/api/auth", authRoutes)
 app.use("/api/user", userRoutes)
 app.use("/api/travel-story", travelStoryRoutes)
 
-// Serve frontend static files
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const frontendPath = path.join(__dirname, "../frontend/dist")
 
-// Serving static files from the frontend/dist folder
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")))
+app.use("/assets", express.static(path.join(process.cwd(), "assets")))
+
+const frontendPath = path.join(__dirname, "../frontend/dist")
 app.use(express.static(frontendPath))
 
-// Serve the index.html for any other routes (Frontend handles routing)
 app.get("*", (req, res) => {
   if (!req.path.startsWith("/api")) {
     res.sendFile(path.join(frontendPath, "index.html"))
   }
 })
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")))
-
-app.use("/assets", express.static(path.join(process.cwd(), "assets")))
-
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500
-
   const message = err.message || "Internal Server Error"
-
   res.status(statusCode).json({
     success: false,
     statusCode,
     message,
   })
+})
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`)
 })
