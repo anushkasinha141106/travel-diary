@@ -1,6 +1,5 @@
 import axios from "axios";
-
-export const BASE_URL = "https://travel-diary-04gc.onrender.com";
+import BASE_URL from "../config";
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,

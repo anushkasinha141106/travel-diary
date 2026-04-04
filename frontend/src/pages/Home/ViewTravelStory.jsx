@@ -30,6 +30,13 @@ const ViewTravelStory = ({
         </div>
       </div>
 
+      {/* Decorative Charm Sticker */}
+      {storyInfo && storyInfo.charm && (
+        <div className="absolute top-2 left-0 bg-white/80 backdrop-blur-sm w-12 h-12 flex items-center justify-center rounded-full text-3xl shadow-sm border border-cyan-100 z-10">
+          {storyInfo.charm}
+        </div>
+      )}
+
       <div>
         <div className="flex-1 flex flex-col gap-2 py-4">
           <h1 className="text-2xl text-slate-950">

@@ -4,6 +4,7 @@ import dotenv from "dotenv"
 import cookieParser from "cookie-parser"
 import path from "path"
 import cors from "cors"
+import fs from "fs"
 
 import authRoutes from "./routes/auth.route.js"
 import userRoutes from "./routes/user.route.js"
@@ -23,12 +24,18 @@ mongoose
 
 const app = express()
 
+// Check if uploads folder exists
+const uploadsDir = path.join(process.cwd(), "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+}
+
 // Enable CORS for frontend (Replace with your frontend URL)
 app.use(
   cors({
-    origin: ["https://travel-diary-1-km32.onrender.com", "http://localhost:5173"], 
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allow CRUD operations
-    credentials: true, // Allow cookies & authorization headers
+    origin: process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(",") : ["http://localhost:5173"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   })
 )
 
@@ -51,9 +58,9 @@ app.listen(PORT, () => {
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")))
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")))
 
-app.use("/assets", express.static(path.join(__dirname, "assets")))
+app.use("/assets", express.static(path.join(process.cwd(), "assets")))
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500

@@ -13,22 +13,26 @@ const TravelStoryCard = ({
   onEdit,
   onClick,
   onFavouriteClick,
+  charm,
 }) => {
-  console.log(isFavourite)
-  console.log("BASE:", BASE_URL);
-  console.log("IMAGE:", imageUrl);
-
   return (
     <div className="border border-slate-200 rounded-lg overflow-hidden bg-white hover:shadow-lg hover:shadow-slate-200 transition-all ease-in-out relative cursor-pointer">
       <img
-        src={`${BASE_URL}/assets/grid${imageUrl}`}
+        src={imageUrl}
         alt={title}
-        className="w-full h-56 object-cover rounded-lg"
+        className="w-full h-56 object-cover"
         onClick={onClick}
       />
 
+      {/* Decorative Charm Sticker */}
+      {charm && (
+        <div className="absolute top-4 left-4 bg-white/70 backdrop-blur-sm w-10 h-10 flex items-center justify-center rounded-full text-2xl shadow-sm border border-white/50 pointer-events-none">
+          {charm}
+        </div>
+      )}
+
       <button
-        className="w-12 h-12 flex items-center justify-center bg-white/40 rounded-lg border border-white/30 absolute top-4 right-4"
+        className="w-10 h-10 flex items-center justify-center bg-white/40 rounded-lg border border-white/30 absolute top-4 right-4"
         onClick={onFavouriteClick}
       >
         <FaHeart
@@ -49,14 +53,19 @@ const TravelStoryCard = ({
           </div>
         </div>
 
-        <p className="text-sm text-slate-600 mt-2">{story?.slice(0, 60)}</p>
+        <p className="text-sm text-slate-600 mt-2 leading-relaxed">
+          {story?.slice(0, 60)}
+          {story?.length > 60 && "..."}
+        </p>
 
-        <div className="inline-flex items-center gap-2 text-[13px] text-cyan-600 bg-cyan-200/40 rounded mt-3 px-2 py-1">
-          <FaLocationDot className="text-sm" />
+        <div className="flex items-center justify-between mt-3">
+          <div className="inline-flex items-center gap-2 text-[13px] text-cyan-600 bg-cyan-200/40 rounded px-2 py-1">
+            <FaLocationDot className="text-sm" />
 
-          {visitedLocation.map((item, index) =>
-            visitedLocation.length === index + 1 ? `${item}` : `${item},`
-          )}
+            {visitedLocation.map((item, index) =>
+              visitedLocation.length === index + 1 ? `${item}` : `${item}, `
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -192,6 +192,7 @@ const Home = () => {
                       date={item.visitedDate}
                       visitedLocation={item.visitedLocation}
                       isFavourite={item.isFavorite}
+                      charm={item.charm}
                       onEdit={() => handleEdit(item)}
                       onClick={() => handleViewStory(item)}
                       onFavouriteClick={() => updateIsFavourite(item)}
@@ -252,6 +253,12 @@ const Home = () => {
             setOpenAddEditModal({ isShown: false, type: "add", data: null })
           }}
           getAllTravelStories={getAllTravelStories}
+          onDeleteClick={() => {
+            if (openAddEditModal.data) {
+              deleteTravelStory(openAddEditModal.data);
+              setOpenAddEditModal({ isShown: false, type: "add", data: null });
+            }
+          }}
         />
       </Modal>
 

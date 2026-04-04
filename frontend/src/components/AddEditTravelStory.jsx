@@ -14,6 +14,7 @@ const AddEditTravelStory = ({
   type,
   onClose,
   getAllTravelStories,
+  onDeleteClick,
 }) => {
   const [visitedDate, setVisitedDate] = useState(storyInfo?.visitedDate || null)
   const [title, setTitle] = useState(storyInfo?.title || "")
@@ -24,6 +25,20 @@ const AddEditTravelStory = ({
   )
 
   const [error, setError] = useState("")
+  const [charm, setCharm] = useState(storyInfo?.charm || "")
+
+  const stickerOptions = [
+    { emoji: "🐚", label: "Seashell" },
+    { emoji: "🧿", label: "Ward" },
+    { emoji: "🎈", label: "Party Ball" },
+    { emoji: "🍹", label: "Soft Drink" },
+    { emoji: "⛵", label: "Sail" },
+    { emoji: "🥨", label: "Pretzel" },
+    { emoji: "🍰", label: "Treat" },
+    { emoji: "👒", label: "Hat" },
+    { emoji: "🌴", label: "Palm" },
+    { emoji: "🧸", label: "Tedy" }
+  ];
 
   const addNewTravelStory = async () => {
     try {
@@ -44,6 +59,7 @@ const AddEditTravelStory = ({
         visitedDate: visitedDate
           ? moment(visitedDate).valueOf()
           : moment().valueOf(),
+        charm: charm || ""
       })
 
       if (response.data && response.data.story) {
@@ -72,6 +88,7 @@ const AddEditTravelStory = ({
         visitedDate: visitedDate
           ? moment(visitedDate).valueOf()
           : moment().valueOf(),
+        charm: charm || ""
       }
 
       if (typeof storyImg === "object") {
@@ -189,7 +206,7 @@ const AddEditTravelStory = ({
                   <MdOutlineUpdate className="text-lg" /> UPDATE STORY
                 </button>
 
-                <button className="btn-small btn-delete">
+                <button className="btn-small btn-delete" onClick={onDeleteClick}>
                   <MdOutlineDeleteOutline className="text-lg" /> DELETE STORY
                 </button>
               </>
@@ -245,6 +262,26 @@ const AddEditTravelStory = ({
             <label className="input-label">VISITED LOCATIONS</label>
 
             <TagInput tags={visitedLocation} setTags={setVisitedLocation} />
+          </div>
+
+          <div className="pt-5 pb-10">
+            <label className="input-label">DECORATIVE CHARM</label>
+            <div className="flex flex-wrap gap-4 mt-2">
+              {stickerOptions.map((option, idx) => (
+                <button
+                  key={idx}
+                  title={option.label}
+                  className={`text-2xl p-2 rounded-full transition-all border-2 ${
+                    charm === option.emoji
+                      ? "bg-cyan-100 border-[#05b6d3] scale-110 shadow-md"
+                      : "bg-slate-50 border-transparent hover:bg-slate-100"
+                  }`}
+                  onClick={() => setCharm(option.emoji === charm ? "" : option.emoji)}
+                >
+                  {option.emoji}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

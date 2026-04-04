@@ -5,7 +5,7 @@ import path from "path"
 import fs from "fs"
 
 export const addTravelStory = async (req, res, next) => {
-  const { title, story, visitedLocation, imageUrl, visitedDate } = req.body
+  const { title, story, visitedLocation, imageUrl, visitedDate, charm } = req.body
 
   const userId = req.user.id
 
@@ -25,6 +25,7 @@ export const addTravelStory = async (req, res, next) => {
       userId,
       imageUrl,
       visitedDate: parsedVisitedDate,
+      charm,
     })
 
     await travelStory.save()
@@ -103,7 +104,7 @@ export const deleteImage = async (req, res, next) => {
 
 export const editTravelStory = async (req, res, next) => {
   const { id } = req.params
-  const { title, story, visitedLocation, imageUrl, visitedDate } = req.body
+  const { title, story, visitedLocation, imageUrl, visitedDate, charm } = req.body
   const userId = req.user.id
 
   // validate required field
@@ -118,16 +119,17 @@ export const editTravelStory = async (req, res, next) => {
     const travelStory = await TravelStory.findOne({ _id: id, userId: userId })
 
     if (!travelStory) {
-      next(errorHandler(404, "Travel Story not found!"))
+      return next(errorHandler(404, "Travel Story not found!"))
     }
 
-    const placeholderImageUrl = `https://travel-diary-04gc.onrender.com/assets/placeholderImage.png`
+    const placeholderImageUrl = `${process.env.BASE_URL}/assets/placeholderImage.png`
 
     travelStory.title = title
     travelStory.story = story
     travelStory.visitedLocation = visitedLocation
     travelStory.imageUrl = imageUrl || placeholderImageUrl
     travelStory.visitedDate = parsedVisitedDate
+    travelStory.charm = charm || ""
 
     await travelStory.save()
 
@@ -148,14 +150,14 @@ export const deleteTravelStory = async (req, res, next) => {
     const travelStory = await TravelStory.findOne({ _id: id, userId: userId })
 
     if (!travelStory) {
-      next(errorHandler(404, "Travel Story not found!"))
+      return next(errorHandler(404, "Travel Story not found!"))
     }
 
     // delete travel story from the database
     await travelStory.deleteOne({ _id: id, userId: userId })
 
     // Check if the image is not a placeholder before deleting
-    const placeholderImageUrl = `https://travel-diary-04gc.onrender.com/assets/placeholderImage.png`
+    const placeholderImageUrl = `${process.env.BASE_URL}/assets/placeholderImage.png`
 
     // Extract the filename from the imageUrl
     const imageUrl = travelStory.imageUrl
@@ -166,7 +168,7 @@ export const deleteTravelStory = async (req, res, next) => {
       const filePath = path.join(rootDir, "uploads", filename)
 
       // Check if the file exists before deleting
-      if (file.existsSync(filePath)) {
+      if (fs.existsSync(filePath)) {
         // delete the file
         await fs.promises.unlink(filePath) // delete the file asynchronously
       }

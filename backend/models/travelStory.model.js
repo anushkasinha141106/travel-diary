@@ -37,6 +37,10 @@ const travelStorySchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    charm: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 )
