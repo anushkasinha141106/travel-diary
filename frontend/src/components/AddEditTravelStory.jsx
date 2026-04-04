@@ -8,6 +8,7 @@ import axiosInstance from "../utils/axiosInstance"
 import moment from "moment"
 import { toast } from "react-toastify"
 import uploadImage from "../utils/uploadImage"
+import { motion } from "framer-motion"
 
 const AddEditTravelStory = ({
   storyInfo,
@@ -27,17 +28,16 @@ const AddEditTravelStory = ({
   const [error, setError] = useState("")
   const [charm, setCharm] = useState(storyInfo?.charm || "")
 
+  const [charmPosition, setCharmPosition] = useState(
+    storyInfo?.charmPosition || { x: 0, y: 0 }
+  )
+
   const stickerOptions = [
-    { emoji: "🐚", label: "Seashell" },
-    { emoji: "🧿", label: "Ward" },
-    { emoji: "🎈", label: "Party Ball" },
-    { emoji: "🍹", label: "Soft Drink" },
-    { emoji: "⛵", label: "Sail" },
-    { emoji: "🥨", label: "Pretzel" },
-    { emoji: "🍰", label: "Treat" },
-    { emoji: "👒", label: "Hat" },
-    { emoji: "🌴", label: "Palm" },
-    { emoji: "🧸", label: "Tedy" }
+    { url: "/assets/stickers/guitar.png", label: "Guitar" },
+    { url: "/assets/stickers/disco.png", label: "Disco" },
+    { url: "/assets/stickers/clapboard.png", label: "Clapboard" },
+    { url: "/assets/stickers/vinyl.png", label: "Vinyl" },
+    { url: "/assets/stickers/sunflowers.png", label: "Sunflowers" }
   ];
 
   const addNewTravelStory = async () => {
@@ -59,7 +59,8 @@ const AddEditTravelStory = ({
         visitedDate: visitedDate
           ? moment(visitedDate).valueOf()
           : moment().valueOf(),
-        charm: charm || ""
+        charm: charm || "",
+        charmPosition: charmPosition,
       })
 
       if (response.data && response.data.story) {
@@ -88,7 +89,8 @@ const AddEditTravelStory = ({
         visitedDate: visitedDate
           ? moment(visitedDate).valueOf()
           : moment().valueOf(),
-        charm: charm || ""
+        charm: charm || "",
+        charmPosition: charmPosition,
       }
 
       if (typeof storyImg === "object") {
@@ -243,6 +245,9 @@ const AddEditTravelStory = ({
             image={storyImg}
             setImage={setStoryImg}
             handleDeleteImage={handleDeleteStoryImage}
+            charm={charm}
+            charmPosition={charmPosition}
+            setCharmPosition={setCharmPosition}
           />
 
           <div className="flex flex-col gap-2 mt-4">
@@ -264,26 +269,40 @@ const AddEditTravelStory = ({
             <TagInput tags={visitedLocation} setTags={setVisitedLocation} />
           </div>
 
-          <div className="pt-5 pb-10">
-            <label className="input-label">DECORATIVE CHARM</label>
-            <div className="flex flex-wrap gap-4 mt-2">
+          <div className="pt-5 pb-10 relative">
+            <label className="input-label">SELECT A DECORATIVE CHARM</label>
+            <div className="flex flex-wrap gap-5 mt-4 relative z-10">
               {stickerOptions.map((option, idx) => (
-                <button
+                <motion.button
                   key={idx}
+                  whileHover={{ scale: 1.2, rotate: 5 }}
+                  whileTap={{ scale: 0.9 }}
                   title={option.label}
-                  className={`text-2xl p-2 rounded-full transition-all border-2 ${
-                    charm === option.emoji
-                      ? "bg-cyan-100 border-[#05b6d3] scale-110 shadow-md"
-                      : "bg-slate-50 border-transparent hover:bg-slate-100"
+                  className={`p-1 rounded-2xl transition-all border-2 flex items-center justify-center ${
+                    charm === option.url
+                      ? "bg-cyan-100 border-[#05b6d3] shadow-lg shadow-cyan-200/50 -translate-y-1"
+                      : "bg-white border-slate-100 hover:border-slate-200 hover:shadow-md"
                   }`}
-                  onClick={() => setCharm(option.emoji === charm ? "" : option.emoji)}
+                  onClick={() => setCharm(option.url === charm ? "" : option.url)}
                 >
-                  {option.emoji}
-                </button>
+                  <img src={option.url} alt={option.label} className="w-12 h-12 object-contain" />
+                </motion.button>
               ))}
+            </div>
+
+            {/* Subtle Floating Background Charms for context */}
+            <div className="absolute -bottom-10 -right-10 opacity-20 pointer-events-none select-none blur-sm animate-pulse">
+              {charm && <img src={charm} className="w-40 h-40 object-contain" />}
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Background Charms (Decorative) */}
+      <div className="absolute top-0 right-0 p-10 pointer-events-none opacity-10 flex flex-col gap-10 overflow-hidden h-full">
+        <img src="/assets/stickers/disco.png" className="w-24 h-24 object-contain animate-bounce" />
+        <img src="/assets/stickers/guitar.png" className="w-32 h-32 object-contain translate-x-10" />
+        <img src="/assets/stickers/vinyl.png" className="w-20 h-20 object-contain -translate-x-5" />
       </div>
     </div>
   )

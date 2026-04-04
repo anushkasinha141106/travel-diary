@@ -193,6 +193,7 @@ const Home = () => {
                       visitedLocation={item.visitedLocation}
                       isFavourite={item.isFavorite}
                       charm={item.charm}
+                      charmPosition={item.charmPosition}
                       onEdit={() => handleEdit(item)}
                       onClick={() => handleViewStory(item)}
                       onFavouriteClick={() => updateIsFavourite(item)}

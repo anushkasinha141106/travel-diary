@@ -51,13 +51,24 @@ app.use("/api/auth", authRoutes)
 app.use("/api/user", userRoutes)
 app.use("/api/travel-story", travelStoryRoutes)
 
+// Serve frontend static files
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const frontendPath = path.join(__dirname, "../frontend/dist")
+
+// Serving static files from the frontend/dist folder
+app.use(express.static(frontendPath))
+
+// Serve the index.html for any other routes (Frontend handles routing)
+app.get("*", (req, res) => {
+  if (!req.path.startsWith("/api")) {
+    res.sendFile(path.join(frontendPath, "index.html"))
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-// server static files from the uploads and assets directory
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")))
 
 app.use("/assets", express.static(path.join(process.cwd(), "assets")))

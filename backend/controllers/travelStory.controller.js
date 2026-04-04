@@ -5,7 +5,8 @@ import path from "path"
 import fs from "fs"
 
 export const addTravelStory = async (req, res, next) => {
-  const { title, story, visitedLocation, imageUrl, visitedDate, charm } = req.body
+  const { title, story, visitedLocation, imageUrl, visitedDate, charm, charmPosition } =
+    req.body
 
   const userId = req.user.id
 
@@ -26,6 +27,7 @@ export const addTravelStory = async (req, res, next) => {
       imageUrl,
       visitedDate: parsedVisitedDate,
       charm,
+      charmPosition,
     })
 
     await travelStory.save()
@@ -104,7 +106,8 @@ export const deleteImage = async (req, res, next) => {
 
 export const editTravelStory = async (req, res, next) => {
   const { id } = req.params
-  const { title, story, visitedLocation, imageUrl, visitedDate, charm } = req.body
+  const { title, story, visitedLocation, imageUrl, visitedDate, charm, charmPosition } =
+    req.body
   const userId = req.user.id
 
   // validate required field
@@ -130,6 +133,7 @@ export const editTravelStory = async (req, res, next) => {
     travelStory.imageUrl = imageUrl || placeholderImageUrl
     travelStory.visitedDate = parsedVisitedDate
     travelStory.charm = charm || ""
+    travelStory.charmPosition = charmPosition || { x: 0, y: 0 }
 
     await travelStory.save()
 

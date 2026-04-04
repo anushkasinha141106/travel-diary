@@ -41,6 +41,10 @@ const travelStorySchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    charmPosition: {
+      x: { type: Number, default: 0 },
+      y: { type: Number, default: 0 },
+    },
   },
   { timestamps: true }
 )

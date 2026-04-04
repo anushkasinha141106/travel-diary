@@ -30,12 +30,7 @@ const ViewTravelStory = ({
         </div>
       </div>
 
-      {/* Decorative Charm Sticker */}
-      {storyInfo && storyInfo.charm && (
-        <div className="absolute top-2 left-0 bg-white/80 backdrop-blur-sm w-12 h-12 flex items-center justify-center rounded-full text-3xl shadow-sm border border-cyan-100 z-10">
-          {storyInfo.charm}
-        </div>
-      )}
+
 
       <div>
         <div className="flex-1 flex flex-col gap-2 py-4">
@@ -61,13 +56,32 @@ const ViewTravelStory = ({
           </div>
         </div>
 
+      <div className="relative overflow-hidden rounded-lg">
         <img
           src={storyInfo && storyInfo.imageUrl}
           alt="story image"
-          className="w-full h-[300px] object-cover rounded-lg"
+          className="w-full h-[300px] object-cover"
         />
 
-        <div className="mt-4">
+        {/* Decorative Charm Sticker Over Image */}
+        {storyInfo && storyInfo.charm && (
+          <div
+            className="absolute bg-white/80 backdrop-blur-sm p-1 rounded-full shadow-lg border border-cyan-100 z-10 transition-transform hover:scale-110"
+            style={{
+              left: `${storyInfo.charmPosition?.x || 0}px`,
+              top: `${storyInfo.charmPosition?.y || 0}px`,
+            }}
+          >
+            <img
+              src={storyInfo.charm}
+              alt="charm"
+              className="w-12 h-12 object-contain"
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="mt-4">
           <p className="text-sm text-slate-950 leading-6 text-justify whitespace-pre-line">
             {storyInfo.story}
           </p>

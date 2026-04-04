@@ -1,8 +1,16 @@
 import React, { useEffect, useRef, useState } from "react"
 import { BsUpload } from "react-icons/bs"
 import { MdDeleteOutline } from "react-icons/md"
+import { motion } from "framer-motion"
 
-const ImageSelector = ({ image, setImage, handleDeleteImage }) => {
+const ImageSelector = ({
+  image,
+  setImage,
+  handleDeleteImage,
+  charm,
+  charmPosition,
+  setCharmPosition,
+}) => {
   const inputRef = useRef(null)
   const [previewUrl, setPreviewUrl] = useState(null)
 
@@ -62,15 +70,41 @@ const ImageSelector = ({ image, setImage, handleDeleteImage }) => {
           <p className="text-sm text-slate-500">Browse image files to upload</p>
         </button>
       ) : (
-        <div className="w-full relative">
+        <div className="w-full relative overflow-hidden rounded-lg">
           <img
             src={previewUrl}
             alt="Selected"
-            className="w-full h-[300px] object-cover rounded-lg"
+            className="w-full h-[300px] object-cover"
           />
 
+          {/* Draggable Charm Sticker */}
+          {charm && (
+            <motion.div
+              drag
+              dragMomentum={false}
+              dragConstraints={{ left: 0, right: 300, top: 0, bottom: 250 }}
+              initial={{ x: charmPosition.x, y: charmPosition.y }}
+              onDragEnd={(event, info) => {
+                setCharmPosition({
+                  x: charmPosition.x + info.offset.x,
+                  y: charmPosition.y + info.offset.y,
+                })
+              }}
+              className="absolute cursor-move z-10"
+              style={{ top: 0, left: 0 }}
+            >
+              <div className="bg-white/70 backdrop-blur-sm p-1 rounded-full shadow-lg border border-white/50">
+                <img
+                  src={charm}
+                  alt="Sticker"
+                  className="w-16 h-16 object-contain pointer-events-none"
+                />
+              </div>
+            </motion.div>
+          )}
+
           <button
-            className="btn-small btn-delete absolute top-2 right-2"
+            className="btn-small btn-delete absolute top-2 right-2 z-20"
             onClick={handleRemoveImage}
           >
             <MdDeleteOutline className="text-xl" />

@@ -14,22 +14,32 @@ const TravelStoryCard = ({
   onClick,
   onFavouriteClick,
   charm,
+  charmPosition,
 }) => {
   return (
     <div className="border border-slate-200 rounded-lg overflow-hidden bg-white hover:shadow-lg hover:shadow-slate-200 transition-all ease-in-out relative cursor-pointer">
-      <img
-        src={imageUrl}
-        alt={title}
-        className="w-full h-56 object-cover"
-        onClick={onClick}
-      />
+      <div className="relative overflow-hidden">
+        <img
+          src={imageUrl}
+          alt={title}
+          className="w-full h-56 object-cover"
+          onClick={onClick}
+        />
 
-      {/* Decorative Charm Sticker */}
-      {charm && (
-        <div className="absolute top-4 left-4 bg-white/70 backdrop-blur-sm w-10 h-10 flex items-center justify-center rounded-full text-2xl shadow-sm border border-white/50 pointer-events-none">
-          {charm}
-        </div>
-      )}
+        {/* Decorative Charm Sticker */}
+        {charm && (
+          <div
+            className="absolute bg-white/70 backdrop-blur-sm p-1 rounded-full shadow-sm border border-white/50 pointer-events-none z-10"
+            style={{
+              left: `${charmPosition?.x || 0}px`,
+              top: `${charmPosition?.y || 0}px`,
+              transform: "scale(0.8)",
+            }}
+          >
+            <img src={charm} alt="charm" className="w-10 h-10 object-contain" />
+          </div>
+        )}
+      </div>
 
       <button
         className="w-10 h-10 flex items-center justify-center bg-white/40 rounded-lg border border-white/30 absolute top-4 right-4"
