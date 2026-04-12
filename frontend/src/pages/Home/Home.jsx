@@ -12,6 +12,7 @@ import { DayPicker } from "react-day-picker"
 import moment from "moment"
 import FilterInfoTitle from "../../components/FilterInfoTitle"
 import { getEmptyCardMessage } from "../../utils/helper"
+import { motion } from "framer-motion"
 
 const Home = () => {
   const [allStories, setAllStories] = useState([])
