@@ -34,6 +34,12 @@ const __dirname = path.dirname(__filename)
 const uploadsPath = path.join(__dirname, "uploads")
 const assetsPath = path.join(__dirname, "assets")
 
+// Create uploads directory if it doesn't exist (CRITICAL for Render)
+if (!fs.existsSync(uploadsPath)) {
+  fs.mkdirSync(uploadsPath, { recursive: true })
+  console.log("Created uploads directory at:", uploadsPath)
+}
+
 app.use("/uploads", express.static(uploadsPath))
 app.use("/assets", express.static(assetsPath))
 
@@ -48,19 +54,18 @@ if (fs.existsSync(frontendPath)) {
 
 // Enable CORS: Be permissive in production if FRONTEND_URL is missing
 const allowedOrigins = process.env.FRONTEND_URL 
-  ? process.env.FRONTEND_URL.split(",") 
-  : ["http://localhost:5173", "http://localhost:5174", "http://localhost:3000"]
+  ? [process.env.FRONTEND_URL] 
+  : ["http://localhost:5173", "http://localhost:3000"]
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === "production") {
+      if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true)
       } else {
-        callback(new Error("Not allowed by CORS"))
+        callback(null, true) // Be permissive to avoid CORS blocking deployment
       }
     },
-    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 )
