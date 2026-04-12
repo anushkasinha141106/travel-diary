@@ -272,7 +272,7 @@ const Home = () => {
           },
         }}
         appElement={document.getElementById("root")}
-        className="w-[80vw] md:w-[40%] h-[80vh] bg-white rounded-lg mx-auto mt-14 p-5 overflow-y-scroll scrollbar z-50"
+        className="w-[90vw] md:w-[50%] lg:w-[40%] h-[85vh] bg-white rounded-3xl mx-auto mt-10 shadow-2xl overflow-hidden z-50 outline-none"
       >
         <AddEditTravelStory
           storyInfo={openAddEditModal.data}
