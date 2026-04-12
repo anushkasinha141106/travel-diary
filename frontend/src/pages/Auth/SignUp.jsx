@@ -177,11 +177,11 @@ const SignUp = () => {
              <div className="relative z-10 text-stone-900">
                 <h4 className="text-[2.6rem] leading-[1.05] mb-4 tracking-tight" style={{ fontFamily: '"Playfair Display", serif' }}>
                   <span className="font-extrabold uppercase text-[2.8rem]">RELIVE YOUR</span><br/>
-                  <span className="italic font-normal text-stone-700">MEMORIES WITH US</span><br/>
-                  <span className="font-bold tracking-widest text-[2rem] text-[#b1a491]">TRAVEL JOURNAL.</span>
+                  <span className="font-normal text-[#8e826b]">MEMORIES WITH US</span><br/>
+                  <span className="font-bold tracking-widest text-[2rem] text-black">TRAVEL JOURNAL.</span>
                 </h4>
                 <p className="text-stone-700 text-sm leading-relaxed mt-5 font-semibold tracking-wide border-t border-stone-800/10 pt-4">
-                  Record your travel experiences and memories in your private journey. Every <span className="italic text-[#8e826b] underline decoration-stone-300 underline-offset-4">picture tells your story</span>!
+                  Record your travel experiences and memories in your private journey. Every picture tells your story!
                 </p>
              </div>
           </div>

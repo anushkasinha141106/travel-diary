@@ -162,28 +162,29 @@ const Home = () => {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#ebe7e0] relative overflow-x-hidden font-sans tracking-tight">
-      {/* Premium Background Image with Overlay */}
+    <div className="min-h-screen bg-[#f3f1ed] relative overflow-x-hidden font-sans tracking-tight">
+      {/* User-Provided Background Image (High Visibility) */}
       <div 
-        className="fixed inset-0 z-0 opacity-40 grayscale-[20%] pointer-events-none"
+        className="fixed inset-0 z-0 pointer-events-none opacity-60"
         style={{
           backgroundImage: 'url("https://i.pinimg.com/736x/8e/3e/32/8e3e3289053075276c9ef56e54581452.jpg")',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          mixBlendMode: 'multiply'
+          filter: 'sepia(20%) brightness(1.1)'
         }}
       />
       
-      {/* Soft Vignette and Mesh Overlay */}
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(235,231,224,0.6)_100%)] z-0 pointer-events-none" />
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-20"
+      {/* Depth and Texture Overlays */}
+      <div className="fixed inset-0 bg-gradient-to-b from-transparent via-[#f3f1ed]/40 to-[#f3f1ed]/80 z-0 pointer-events-none" />
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-10"
         style={{
-          backgroundImage: 'linear-gradient(#968f81 1px, transparent 1px), linear-gradient(90deg, #968f81 1px, transparent 1px)',
-          backgroundSize: '100px 100px'
+          backgroundImage: 'linear-gradient(#968f81 1.5px, transparent 1.5px), linear-gradient(90deg, #968f81 1.5px, transparent 1.5px)',
+          backgroundSize: '70px 70px'
         }}
       />
 
       <div className="relative z-10">
+
 
         <Navbar
           searchQuery={searchQuery}
