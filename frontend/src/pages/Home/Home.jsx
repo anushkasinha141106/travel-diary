@@ -319,7 +319,7 @@ const Home = () => {
       </motion.button>
 
       <ToastContainer />
-    </>
+    </div>
   )
 }
 
