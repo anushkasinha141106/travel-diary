@@ -2,8 +2,10 @@
   "name": "travel-diary-fullstack",
   "version": "1.0.0",
   "scripts": {
-    "build": "cd frontend && npm install && npm run build && cd ../backend && npm install",
-    "start": "cd backend && npm start"
+    "build:frontend": "npm install --prefix frontend && npm run build --prefix frontend",
+    "build:backend": "npm install --prefix backend",
+    "build": "npm run build:frontend && npm run build:backend",
+    "start": "npm start --prefix backend"
   },
   "dependencies": {}
 }

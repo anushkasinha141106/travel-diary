@@ -16,10 +16,13 @@ dotenv.config()
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    console.log("Database is connected")
+    console.log("Successfully connected to MongoDB.")
   })
   .catch((err) => {
-    console.log(err)
+    console.error("CRITICAL: MongoDB connection error!")
+    console.error(err)
+    // Don't exit here, might be a temporary network issue, 
+    // but log it clearly so the user knows why auth fails.
   })
 
 const app = express()
