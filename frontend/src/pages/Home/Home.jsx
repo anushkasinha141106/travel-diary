@@ -163,18 +163,28 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-[#ebe7e0] relative overflow-x-hidden font-sans tracking-tight">
-      {/* Beige Metallic Wire Grid Background (Matches Login) */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.25]"
+      {/* Premium Background Image with Overlay */}
+      <div 
+        className="fixed inset-0 z-0 opacity-40 grayscale-[20%] pointer-events-none"
         style={{
-          backgroundImage: 'linear-gradient(#968f81 1.5px, transparent 1.5px), linear-gradient(90deg, #968f81 1.5px, transparent 1.5px)',
-          backgroundSize: '80px 80px'
+          backgroundImage: 'url("https://i.pinimg.com/736x/8e/3e/32/8e3e3289053075276c9ef56e54581452.jpg")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          mixBlendMode: 'multiply'
         }}
       />
       
-      {/* Depth Vignette */}
-      <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(235,231,224,0.4)_100%)] z-0 pointer-events-none" />
+      {/* Soft Vignette and Mesh Overlay */}
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(235,231,224,0.6)_100%)] z-0 pointer-events-none" />
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-20"
+        style={{
+          backgroundImage: 'linear-gradient(#968f81 1px, transparent 1px), linear-gradient(90deg, #968f81 1px, transparent 1px)',
+          backgroundSize: '100px 100px'
+        }}
+      />
 
       <div className="relative z-10">
+
         <Navbar
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -310,7 +320,7 @@ const Home = () => {
       <motion.button
         whileHover={{ scale: 1.1, rotate: 90 }}
         whileTap={{ scale: 0.9 }}
-        className="w-16 h-16 flex items-center justify-center rounded-full bg-stone-800 hover:bg-stone-900 shadow-2xl fixed right-10 bottom-10 z-50 transition-colors"
+        className="w-16 h-16 flex items-center justify-center rounded-full bg-[#b27d7d] hover:bg-[#a16c6c] shadow-[0_15px_30px_rgba(178,125,125,0.3)] fixed right-10 bottom-10 z-50 transition-colors"
         onClick={() => {
           setOpenAddEditModal({ isShown: true, type: "add", data: null })
         }}
