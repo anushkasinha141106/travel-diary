@@ -72,6 +72,12 @@ const AddEditTravelStory = ({
       }
     } catch (error) {
       console.log(error)
+      if (error.code === 'ECONNABORTED') {
+        setError("Image upload took too long. Please try a smaller image or a better connection.")
+      } else {
+        setError("An unexpected error occurred. Please try again.")
+      }
+      toast.error("Failed to add story")
     }
   }
 
