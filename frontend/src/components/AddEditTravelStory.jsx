@@ -267,8 +267,9 @@ const AddEditTravelStory = ({
         </div>
       </div>
 
-      {/* Sticky Bottom Action Bar */}
-      <div className="sticky bottom-0 left-0 right-0 p-6 bg-white border-t border-stone-100 z-50 flex items-center justify-between shadow-[0_-10px_30px_rgba(0,0,0,0.02)]">
+      {/* Fixed Bottom Action Bar (Flex Item) */}
+      <div className="p-6 bg-[#f8f7f4] border-t border-stone-100 flex items-center justify-between shadow-[0_-10px_30px_rgba(0,0,0,0.02)]">
+
 
         <div className="flex items-center gap-3">
           {type === "edit" && (

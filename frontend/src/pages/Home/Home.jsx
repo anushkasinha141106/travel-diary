@@ -267,12 +267,15 @@ const Home = () => {
         onRequestClose={() => {}}
         style={{
           overlay: {
-            backgroundColor: "rgba(0,0,0,0.2)",
+            backgroundColor: "rgba(0,0,0,0.4)",
             zIndex: 999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
           },
         }}
         appElement={document.getElementById("root")}
-        className="w-[90vw] md:w-[50%] lg:w-[40%] h-[85vh] bg-white rounded-3xl mx-auto mt-10 shadow-2xl overflow-hidden z-50 outline-none"
+        className="w-[95vw] md:w-[60%] lg:w-[45%] h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden z-[1000] outline-none relative"
       >
         <AddEditTravelStory
           storyInfo={openAddEditModal.data}
