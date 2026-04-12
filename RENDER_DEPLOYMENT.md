@@ -7,18 +7,17 @@ In your Render Dashboard, find your Web Service and change the following setting
 
 *   **Build Command**: `npm run build`
 *   **Start Command**: `npm start`
-*   **Root Directory**: (Leave this blank! This is very important.)
+*   **Root Directory**: ⚠️ **LEAVE THIS EMPTY** (Do NOT type "backend" or "frontend" here!)
 
 ## 🛠️ Step 2: Push your Code
 I've updated your `package.json` at the very root of your folder. When Render sees `npm run build`, it will now automatically:
-1.  Go into the `frontend` folder and build your website.
+1.  Go into the `frontend` folder and build your website into `frontend/dist`.
 2.  Go into the `backend` folder and install all your tools.
-3.  Start everything on a single link.
+3.  The backend will then serve the `frontend/dist` folder.
 
 ## ✨ Why this fixes your problems:
-- **No more broken images**: Since I moved your images to the `frontend/public` folder, they are now part of the build! They will load instantly on the same URL.
-- **Login/Signup Fix**: Since both parts of the app are on the same link, there are no more connection issues or CORS errors.
-- **"Dead" Buttons**: I removed the `pointer-events-none` that was accidentally blocking your clicks.
+- **ENOENT Fix**: Since we build everything from the root, the paths like `../frontend/dist` will now match exactly what Render creates.
+- **No more broken images**: Since images are now relative paths, they will load no matter what your Render URL is.
 
 ### Final Checklist of Environment Variables:
 Make sure these are set in Render -> Environment:

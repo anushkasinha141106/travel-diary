@@ -30,18 +30,21 @@ const app = express()
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// Logging middleware for troubleshooting
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.url}`)
-  next()
-})
+// Diagnostic logging for storage paths
+const uploadsPath = path.join(__dirname, "uploads")
+const assetsPath = path.join(__dirname, "assets")
 
-// Static routes: Ensure these are at the top to catch asset requests
-app.use("/uploads", express.static(path.join(__dirname, "uploads")))
-app.use("/assets", express.static(path.join(__dirname, "assets")))
+app.use("/uploads", express.static(uploadsPath))
+app.use("/assets", express.static(assetsPath))
 
-const frontendPath = path.join(__dirname, "../frontend/dist")
-app.use(express.static(frontendPath))
+const frontendPath = path.resolve(__dirname, "../frontend/dist")
+
+if (fs.existsSync(frontendPath)) {
+  console.log(`Frontend found at: ${frontendPath}`)
+  app.use(express.static(frontendPath))
+} else {
+  console.warn(`WARNING: Frontend dist folder NOT found at: ${frontendPath}`)
+}
 
 // Enable CORS: Be permissive in production if FRONTEND_URL is missing
 const allowedOrigins = process.env.FRONTEND_URL 
@@ -74,7 +77,12 @@ app.use("/api/travel-story", travelStoryRoutes)
 // Catch-all (must be the VERY bottom)
 app.get("*", (req, res) => {
   if (!req.path.startsWith("/api")) {
-    res.sendFile(path.join(frontendPath, "index.html"))
+    const indexPath = path.join(frontendPath, "index.html")
+    if (fs.existsSync(indexPath)) {
+      res.sendFile(indexPath)
+    } else {
+      res.status(404).send("Frontend not built. Please run 'npm run build' in the root directory.")
+    }
   }
 })
 
