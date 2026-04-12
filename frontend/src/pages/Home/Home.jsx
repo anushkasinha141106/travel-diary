@@ -161,78 +161,93 @@ const Home = () => {
   }, [])
 
   return (
-    <>
-      <Navbar
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        onSearchNote={onSearchStory}
-        handleClearSearch={handleClearSearch}
+    <div className="min-h-screen bg-[#ebe7e0] relative overflow-x-hidden font-sans tracking-tight">
+      {/* Beige Metallic Wire Grid Background (Matches Login) */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-[0.25]"
+        style={{
+          backgroundImage: 'linear-gradient(#968f81 1.5px, transparent 1.5px), linear-gradient(90deg, #968f81 1.5px, transparent 1.5px)',
+          backgroundSize: '80px 80px'
+        }}
       />
+      
+      {/* Depth Vignette */}
+      <div className="fixed inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(235,231,224,0.4)_100%)] z-0 pointer-events-none" />
 
-      <div className="container mx-auto py-10">
-        <FilterInfoTitle
-          filterType={filterType}
-          filterDate={dateRange}
-          onClear={() => {
-            resetFilter()
-          }}
+      <div className="relative z-10">
+        <Navbar
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          onSearchNote={onSearchStory}
+          handleClearSearch={handleClearSearch}
         />
 
-        <div className="flex gap-7">
-          <div className="flex-1">
-            {allStories.length > 0 ? (
-              <div className="grid grid-cols-2 gap-4">
-                {allStories.map((item) => {
-                  return (
-                    <TravelStoryCard
-                      key={item._id}
-                      imageUrl={item.imageUrl}
-                      title={item.title}
-                      story={item.story}
-                      date={item.visitedDate}
-                      visitedLocation={item.visitedLocation}
-                      isFavourite={item.isFavorite}
-                      charm={item.charm}
-                      charmPosition={item.charmPosition}
-                      onEdit={() => handleEdit(item)}
-                      onClick={() => handleViewStory(item)}
-                      onFavouriteClick={() => updateIsFavourite(item)}
-                    />
-                  )
-                })}
-              </div>
-            ) : (
-              <EmptyCard
-                imgSrc={
-                  "https://images.pexels.com/photos/5706021/pexels-photo-5706021.jpeg?auto=compress&cs=tinysrgb&w=600"
-                }
-                message={getEmptyCardMessage(filterType)}
-                setOpenAddEditModal={() =>
-                  setOpenAddEditModal({
-                    isShown: true,
-                    type: "add",
-                    data: null,
-                  })
-                }
-              />
-            )}
-          </div>
+        <div className="container mx-auto py-10 px-6">
+          <FilterInfoTitle
+            filterType={filterType}
+            filterDate={dateRange}
+            onClear={() => {
+              resetFilter()
+            }}
+          />
 
-          <div className="w-[320px]">
-            <div className="bg-white border border-slate-200 shadow-lg shadow-slate-200/60 rounded-lg">
-              <div className="p-3">
-                <DayPicker
-                  captionLayout="dropdown"
-                  mode="range"
-                  selected={dateRange}
-                  onSelect={handleDayClick}
-                  pagedNavigation
+          <div className="flex flex-col lg:flex-row gap-10">
+            <div className="flex-1">
+              {allStories.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {allStories.map((item) => {
+                    return (
+                      <TravelStoryCard
+                        key={item._id}
+                        imageUrl={item.imageUrl}
+                        title={item.title}
+                        story={item.story}
+                        date={item.visitedDate}
+                        visitedLocation={item.visitedLocation}
+                        isFavourite={item.isFavorite}
+                        charm={item.charm}
+                        charmPosition={item.charmPosition}
+                        onEdit={() => handleEdit(item)}
+                        onClick={() => handleViewStory(item)}
+                        onFavouriteClick={() => updateIsFavourite(item)}
+                      />
+                    )
+                  })}
+                </div>
+              ) : (
+                <EmptyCard
+                  imgSrc={
+                    "https://images.pexels.com/photos/5706021/pexels-photo-5706021.jpeg?auto=compress&cs=tinysrgb&w=600"
+                  }
+                  message={getEmptyCardMessage(filterType)}
+                  setOpenAddEditModal={() =>
+                    setOpenAddEditModal({
+                      isShown: true,
+                      type: "add",
+                      data: null,
+                    })
+                  }
                 />
+              )}
+            </div>
+
+            <div className="w-full lg:w-[350px]">
+              <div className="bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.05)] rounded-3xl p-4 sticky top-24">
+                <div className="p-3">
+                  <DayPicker
+                    captionLayout="dropdown"
+                    mode="range"
+                    selected={dateRange}
+                    onSelect={handleDayClick}
+                    pagedNavigation
+                    className="mx-auto"
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
 
       {/* Add & Edit Travel Story Modal */}
       <Modal
@@ -291,14 +306,16 @@ const Home = () => {
         />
       </Modal>
 
-      <button
-        className="w-16 h-16 flex items-center justify-center rounded-full bg-[#05b6d3] hover:bg-cyan-400 fixed right-10 bottom-10"
+      <motion.button
+        whileHover={{ scale: 1.1, rotate: 90 }}
+        whileTap={{ scale: 0.9 }}
+        className="w-16 h-16 flex items-center justify-center rounded-full bg-stone-800 hover:bg-stone-900 shadow-2xl fixed right-10 bottom-10 z-50 transition-colors"
         onClick={() => {
           setOpenAddEditModal({ isShown: true, type: "add", data: null })
         }}
       >
         <IoMdAdd className="text-[32px] text-white" />
-      </button>
+      </motion.button>
 
       <ToastContainer />
     </>

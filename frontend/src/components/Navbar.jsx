@@ -41,22 +41,27 @@ const Navbar = ({
   }
 
   return (
-    <div className="bg-white flex items-center justify-between px-10 py-2 drop-shadow sticky top-0 z-10">
-      <Link to={"/dashboard"}>
-        <h1 className="font-bold text-2xl sm:text-2xl flex flex-wrap">
-          <span className="text-blue-400">Travel</span>
-          <span className="text-blue-800">Diary</span>
+    <div className="bg-white/40 backdrop-blur-md flex items-center justify-between px-6 md:px-14 py-4 sticky top-0 z-40 border-b border-white/30 mix-blend-multiply">
+      <Link to={"/"} className="group">
+        <h1 className="flex flex-col leading-none">
+          <span className="text-[1.4rem] font-bold tracking-[0.2em] text-stone-800 group-hover:text-stone-900 transition-colors uppercase">Travel</span>
+          <span className="text-[1.1rem] font-medium tracking-[0.4em] text-[#8e826b] flex items-center gap-2 italic">
+            JOURNAL
+            <div className="h-[1px] w-8 bg-[#8e826b] opacity-40 grow" />
+          </span>
         </h1>
       </Link>
 
-      <SearchBar
-        value={searchQuery}
-        onChange={(e) => {
-          setSearchQuery(e.target.value)
-        }}
-        handleSearch={handleSearch}
-        onClearSearch={onClearSearch}
-      />
+      <div className="flex-1 max-w-md mx-8">
+        <SearchBar
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value)
+          }}
+          handleSearch={handleSearch}
+          onClearSearch={onClearSearch}
+        />
+      </div>
 
       <Profile onLogout={onLogout} />
     </div>
