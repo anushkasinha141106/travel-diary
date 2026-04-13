@@ -22,7 +22,11 @@ export const getUsers = async (req, res, next) => {
 export const signout = async (req, res, next) => {
   try {
     res
-      .clearCookie("access_token")
+      .clearCookie("access_token", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+      })
       .status(200)
       .json("User has been loggedout successfully!")
   } catch (error) {

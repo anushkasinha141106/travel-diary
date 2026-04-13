@@ -9,6 +9,7 @@ import moment from "moment"
 import { toast } from "react-toastify"
 import uploadImage from "../utils/uploadImage"
 import { motion } from "framer-motion"
+import BASE_URL from "../config"
 
 const AddEditTravelStory = ({
   storyInfo,
@@ -265,7 +266,7 @@ const AddEditTravelStory = ({
                   }`}
                   onClick={() => setCharm(option.url === charm ? "" : option.url)}
                 >
-                  <img src={option.url} alt={option.label} className="w-12 h-12 object-contain" />
+                  <img src={option.url.startsWith("http") ? option.url : `${BASE_URL}${option.url}`} alt={option.label} className="w-12 h-12 object-contain" />
                 </motion.button>
               ))}
             </div>

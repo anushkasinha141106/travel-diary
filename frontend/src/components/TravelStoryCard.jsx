@@ -21,11 +21,11 @@ const TravelStoryCard = ({
   // Ensure the image URL is absolute for access across devices
   const fullImageUrl = imageUrl?.startsWith("http") 
     ? imageUrl 
-    : (imageUrl?.startsWith("/uploads") ? `${BASE_URL}${imageUrl}` : imageUrl);
+    : ((imageUrl?.startsWith("/uploads") || imageUrl?.startsWith("/assets")) ? `${BASE_URL}${imageUrl}` : imageUrl);
 
   const fullCharmUrl = charm?.startsWith("http") 
     ? charm 
-    : (charm?.startsWith("/uploads") ? `${BASE_URL}${charm}` : charm);
+    : ((charm?.startsWith("/uploads") || charm?.startsWith("/assets")) ? `${BASE_URL}${charm}` : charm);
 
   return (
     <motion.div 
