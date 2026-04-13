@@ -1,8 +1,16 @@
 import axios from "axios";
-import BASE_URL from "../config";
+
+const getBaseURL = () => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl && envUrl.startsWith("http")) {
+    return envUrl;
+  }
+  // Fallback to production backend
+  return "https://travel-diary-04gc.onrender.com";
+};
 
 const axiosInstance = axios.create({
-  baseURL: BASE_URL ? `${BASE_URL}/api` : "/api",
+  baseURL: `${getBaseURL()}/api`,
   timeout: 30000,
   headers: {
     "Content-Type": "application/json",
