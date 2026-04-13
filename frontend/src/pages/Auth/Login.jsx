@@ -56,7 +56,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log("Login form submit clicked!")
+    console.log("Login form submitted!")
 
     if (!validateEmail(email)) {
       setError("Please enter a valid email address.")
@@ -171,76 +171,64 @@ const Login = () => {
       </motion.div>
 
       {/* Glassmorphic Login Form Container */}
-      <div className={`absolute z-30 inset-0 flex items-center justify-center pointer-events-none transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${hoveredId !== null ? 'opacity-0 scale-95 blur-sm' : 'opacity-100 scale-100 blur-0'}`}>
+      <div className={`absolute z-30 inset-0 flex items-center justify-center pointer-events-none transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${hoveredId !== null ? 'opacity-0 scale-95 blur-sm select-none pointer-events-none' : 'opacity-100 scale-100 blur-0'}`}>
         
         {/* Actual Form Box */}
-        <div className="flex flex-col md:flex-row shadow-[0_40px_100px_rgba(0,0,0,0.15)] rounded-[2.5rem] md:rounded-[3rem] overflow-hidden bg-white/20 backdrop-blur-3xl border border-white/40 max-w-[900px] w-[92%] md:w-[80%] h-auto z-50 pointer-events-auto relative">
+        <div className="flex flex-col md:flex-row shadow-[0_20px_60px_rgba(0,0,0,0.1)] rounded-3xl overflow-hidden bg-white/20 backdrop-blur-2xl border border-white/50 max-w-[850px] w-[90%] md:w-[75%] h-auto z-50 pointer-events-auto mix-blend-luminosity">
           
-          {/* Subtle Darkening Overlay on Left for legibility */}
-          <div className="absolute inset-y-0 left-0 w-1/2 bg-black/5 md:bg-black/10 z-0 pointer-events-none" />
-
-          {/* Left Text/Branding Panel */}
-          <div className="hidden md:flex flex-col justify-center p-12 lg:p-16 w-1/2 relative z-10 overflow-hidden border-r border-white/20 pointer-events-none select-none">
+          {/* Left Text/Branding Panel (Passes mouse events straight through to the 3D grid!) */}
+          <div className="hidden md:flex flex-col justify-center p-12 bg-white/10 w-1/2 relative overflow-hidden backdrop-blur-md border-r border-white/20">
              <div className="relative z-10 text-stone-900 pointer-events-none">
-                <h4 className="text-[2.6rem] leading-[0.9] mb-4 tracking-tighter" style={{ fontFamily: '"Playfair Display", serif' }}>
-                  <span className="font-black uppercase text-[3.2rem] block">RELIVE</span>
-                  <span className="font-black uppercase text-[3.2rem] block mb-2">YOUR MESS</span>
-                  <span className="font-light italic text-[#8e826b] text-[2.4rem] block -mt-2">Memories With Us</span>
-                  <span className="font-bold tracking-[0.2em] text-[1.2rem] text-stone-500 block mt-8 border-t border-stone-800/10 pt-6 uppercase italic">Travel Journal.</span>
+                <h4 className="text-[2.6rem] leading-[1.05] mb-4 tracking-tight" style={{ fontFamily: '"Playfair Display", serif' }}>
+                  <span className="font-extrabold uppercase text-[2.8rem]">RELIVE YOUR</span><br/>
+                  <span className="font-normal text-[#8e826b]">MEMORIES WITH US</span><br/>
+                  <span className="font-bold tracking-widest text-[2rem] text-black">TRAVEL JOURNAL.</span>
                 </h4>
-                <p className="text-stone-700 text-sm leading-relaxed mt-4 font-semibold tracking-tight opacity-70">
-                  Record your travel experiences and memories in your private journey. Every picture tells a unique story!
+                <p className="text-stone-700 text-sm leading-relaxed mt-5 font-semibold tracking-wide border-t border-stone-800/10 pt-4">
+                  Record your travel experiences and memories in your private journey. Every picture tells your story!
                 </p>
              </div>
           </div>
 
-          {/* Right Form Panel */}
-          <div className="w-full md:w-1/2 p-10 md:p-16 bg-white/30 backdrop-blur-xl pointer-events-auto relative z-10 flex flex-col justify-center min-h-[500px]">
-            <form onSubmit={handleSubmit} className="flex flex-col w-full pointer-events-auto">
-              <h4 className="text-4xl font-black mb-10 text-stone-800 tracking-tighter">Login</h4>
+          {/* Right Form Component */}
+          <div className="w-full md:w-1/2 p-10 md:p-14 bg-white/30 backdrop-blur-xl pointer-events-auto">
+            <form onSubmit={handleSubmit} className="flex flex-col flex-1 h-full justify-center">
+              <h4 className="text-3xl font-bold mb-8 text-stone-800 tracking-tight">Login</h4>
 
-              <div className="space-y-4">
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  className="w-full px-6 py-4 bg-white/50 border border-stone-200/60 shadow-sm text-stone-800 placeholder-stone-400 rounded-2xl focus:bg-white focus:border-stone-400 focus:shadow-md transition-all outline-none font-medium"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
+              <input
+                type="email"
+                placeholder="Email Address"
+                className="input-box bg-white/40 border border-stone-300 shadow-sm mb-4 text-stone-800 placeholder-stone-500 rounded-md focus:bg-white/60 transition-colors"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
 
-                <PasswordInput
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
+              <PasswordInput
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
 
-              {error && (
-                <motion.p 
-                  initial={{ opacity: 0, y: -5 }} 
-                  animate={{ opacity: 1, y: 0 }} 
-                  className="text-red-600 text-[11px] font-bold uppercase tracking-wider pt-4 px-2"
-                >
-                  {error}
-                </motion.p>
+              {error && <p className="text-red-600 text-sm font-medium pt-2 pb-1">{error}</p>}
+
+              {loading ? (
+                <p className="animate-pulse w-full text-center py-3 bg-stone-500 text-white rounded-md mt-4 font-semibold tracking-wide shadow-lg">
+                  AUTHENTICATING...
+                </p>
+              ) : (
+                <button type="submit" className="w-full py-3 bg-stone-800 hover:bg-stone-900 transition-colors text-white rounded-md mt-4 font-semibold tracking-wider hover:shadow-xl hover:-translate-y-[1px] transform duration-200">
+                  LOGIN
+                </button>
               )}
 
-              <button 
-                type="submit" 
-                disabled={loading}
-                className="w-full py-4.5 bg-stone-800 hover:bg-black transition-all text-white rounded-2xl mt-10 font-black tracking-[0.2em] text-[11px] hover:shadow-2xl hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 h-[56px] flex items-center justify-center uppercase"
-              >
-                {loading ? "CHECKING MEMORIES..." : "SIGN IN"}
-              </button>
-
-              <div className="flex items-center justify-center my-10">
+              <div className="flex items-center justify-center my-6">
                 <div className="h-[1px] bg-stone-300 w-full" />
-                <p className="text-[10px] text-stone-400 px-4 uppercase font-black mx-2 whitespace-nowrap tracking-widest">OR</p>
+                <p className="text-xs text-stone-500 px-3 uppercase font-semibold mx-2 whitespace-nowrap">Or</p>
                 <div className="h-[1px] bg-stone-300 w-full" />
               </div>
 
               <button
                 type="button"
-                className="w-full py-4.5 bg-transparent border-2 border-stone-300 text-stone-600 hover:bg-stone-100/50 hover:border-stone-800 transition-all rounded-2xl font-black tracking-[0.2em] text-[10px] uppercase h-[56px]"
+                className="w-full py-3 bg-transparent border-2 border-stone-400 text-stone-700 hover:bg-stone-100/50 hover:border-stone-500 transition-colors rounded-md font-semibold tracking-wider shadow-sm"
                 onClick={() => navigate("/sign-up")}
               >
                 CREATE ACCOUNT
@@ -250,9 +238,6 @@ const Login = () => {
         </div>
       </div>
     </div>
-
-
-
   )
 }
 

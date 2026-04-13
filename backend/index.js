@@ -81,12 +81,15 @@ app.use("/api/travel-story", travelStoryRoutes)
 
 // Catch-all (must be the VERY bottom)
 app.get("*", (req, res) => {
-  if (!req.path.startsWith("/api")) {
-    const indexPath = path.join(frontendPath, "index.html")
-    if (fs.existsSync(indexPath)) {
-      res.sendFile(indexPath)
+  const indexPath = path.join(frontendPath, "index.html")
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath)
+  } else {
+    // If we're hitting an API route that's missing, or front is missing
+    if (req.path.startsWith("/api")) {
+      res.status(404).json({ success: false, message: "API endpoint not found" })
     } else {
-      res.status(404).send("Frontend not built. Please run 'npm run build' in the root directory.")
+      res.status(404).send("Application is starting up or dist folder is missing. Please wait a moment.")
     }
   }
 })
