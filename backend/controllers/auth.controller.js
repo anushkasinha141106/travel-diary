@@ -49,19 +49,28 @@ export const signin = async (req, res, next) => {
   }
 
   try {
+    console.log("Attempting sign-in for:", email);
     const validUser = await User.findOne({ email })
 
     if (!validUser) {
+      console.log("Sign-in failed: User not found");
       return next(errorHandler(404, "User not found"))
     }
 
     const validPassword = bcryptjs.compareSync(password, validUser.password)
 
     if (!validPassword) {
+      console.log("Sign-in failed: Wrong credentials");
       return next(errorHandler(400, "Wrong Credentials"))
     }
 
+    if (!process.env.JWT_SECRET) {
+      console.error("CRITICAL: JWT_SECRET is missing in environment variables!");
+      return next(errorHandler(500, "Server configuration error (missing JWT secret)"))
+    }
+
     const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET)
+    console.log("Sign-in successful for:", email);
 
     const { password: pass, ...rest } = validUser._doc
 
