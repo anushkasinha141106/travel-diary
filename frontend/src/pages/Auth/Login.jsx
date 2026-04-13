@@ -79,18 +79,12 @@ const Login = () => {
       })
 
       if (response.data) {
-        console.log("Login Success:", response.data);
         dispatch(signInSuccess(response.data))
         navigate("/")
       } else {
         dispatch(signInFailure("An unexpected error occurred!"))
       }
     } catch (error) {
-      console.error("LOGIN ERROR:", error);
-      if (error.response) {
-        console.error("SERVER RESPONSE:", error.response.status, error.response.data);
-      }
-      
       dispatch(signInFailure("An unexpected error occurred!"))
       
       if (

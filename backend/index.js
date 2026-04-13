@@ -55,52 +55,40 @@ if (fs.existsSync(frontendPath)) {
 app.use(cookieParser())
 app.use(express.json())
 
-// Enable CORS: Use BASE_URL from .env as the frontend origin
-const allowedOrigins = [
-  process.env.BASE_URL,
-  process.env.FRONTEND_URL,
-  "http://localhost:5173",
-  "http://localhost:3000",
-].filter(Boolean)
-
+// Enable CORS: Be permissive for local dev and production
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true)
-      } else {
-        callback(null, true) // Permissive for production debugging
-      }
+      // Allow all origins for the moment to get you unblocked in production
+      callback(null, true)
     },
     credentials: true,
   })
 )
 
-// API ROUTES (Must be ABOVE static files for clarity)
+// API ROUTES
 app.use("/api/auth", authRoutes)
 app.use("/api/user", userRoutes)
 app.use("/api/travel-story", travelStoryRoutes)
 
-// STATIC ASSETS
-app.use("/uploads", express.static(uploadsPath))
-app.use("/assets", express.static(assetsPath))
+// STATIC ASSETS & FRONTEND
+const _frontendPath = path.resolve(__dirname, "../frontend/dist")
 
-const frontendPath = path.resolve(__dirname, "../frontend/dist")
-if (fs.existsSync(frontendPath)) {
-  app.use(express.static(frontendPath))
-}
+app.use("/uploads", express.static(path.join(__dirname, "uploads")))
+app.use("/assets", express.static(path.join(__dirname, "assets")))
+app.use(express.static(_frontendPath))
 
 // Catch-all (must be the VERY bottom)
 app.get("*", (req, res) => {
-  const indexPath = path.join(frontendPath, "index.html")
+  const indexPath = path.join(_frontendPath, "index.html")
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath)
   } else {
-    // If we're hitting an API route that's missing, or front is missing
+    // Basic fallback if dist is missing
     if (req.path.startsWith("/api")) {
-      res.status(404).json({ success: false, message: "API endpoint not found on server" })
+      res.status(404).json({ success: false, message: "API not found" })
     } else {
-      res.status(404).send("Application is starting up or build folder is missing.")
+      res.status(404).send("Frontend dist folder not found.")
     }
   }
 })
