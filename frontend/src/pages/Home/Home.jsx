@@ -193,7 +193,7 @@ const Home = () => {
           handleClearSearch={handleClearSearch}
         />
 
-        <div className="container mx-auto py-10 px-6">
+        <div className="container mx-auto py-6 md:py-10 px-4 md:px-6">
           <FilterInfoTitle
             filterType={filterType}
             filterDate={dateRange}
@@ -202,10 +202,35 @@ const Home = () => {
             }}
           />
 
-          <div className="flex flex-col lg:flex-row gap-10">
-            <div className="flex-1">
+          <div className="flex flex-col xl:flex-row gap-8 md:gap-10">
+            {/* Calendar Sidebar - Above grid on mobile, sticky on desktop */}
+            <div className="w-full xl:w-[320px] order-1 xl:order-2">
+              <div className="bg-white/50 backdrop-blur-2xl border border-white/60 shadow-[0_15px_40px_rgba(0,0,0,0.03)] rounded-[2rem] p-4 xl:sticky xl:top-24">
+                <div className="p-1">
+                  <h3 className="text-[10px] font-black tracking-[0.2em] text-stone-400 uppercase mb-4 ml-4">Filter by Date</h3>
+                  <DayPicker
+                    captionLayout="dropdown"
+                    mode="range"
+                    selected={dateRange}
+                    onSelect={handleDayClick}
+                    pagedNavigation
+                    className="mx-auto scale-90 md:scale-100 origin-top"
+                  />
+                  {(dateRange.from || dateRange.to) && (
+                    <button 
+                      onClick={resetFilter}
+                      className="w-full mt-2 py-2 text-[10px] font-bold text-stone-400 hover:text-stone-600 uppercase tracking-widest border-t border-stone-100 transition-colors"
+                    >
+                      Clear Selection
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-1 order-2 xl:order-1">
               {allStories.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 2xl:grid-cols-3 gap-6 md:gap-8">
                   {allStories.map((item) => {
                     return (
                       <TravelStoryCard
@@ -226,35 +251,22 @@ const Home = () => {
                   })}
                 </div>
               ) : (
-                <EmptyCard
-                  imgSrc={
-                    "https://images.pexels.com/photos/5706021/pexels-photo-5706021.jpeg?auto=compress&cs=tinysrgb&w=600"
-                  }
-                  message={getEmptyCardMessage(filterType)}
-                  setOpenAddEditModal={() =>
-                    setOpenAddEditModal({
-                      isShown: true,
-                      type: "add",
-                      data: null,
-                    })
-                  }
-                />
-              )}
-            </div>
-
-            <div className="w-full lg:w-[350px]">
-              <div className="bg-white/40 backdrop-blur-xl border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.05)] rounded-3xl p-4 sticky top-24">
-                <div className="p-3">
-                  <DayPicker
-                    captionLayout="dropdown"
-                    mode="range"
-                    selected={dateRange}
-                    onSelect={handleDayClick}
-                    pagedNavigation
-                    className="mx-auto"
+                <div className="min-h-[400px] flex items-center justify-center">
+                  <EmptyCard
+                    imgSrc={
+                      "https://images.pexels.com/photos/5706021/pexels-photo-5706021.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    }
+                    message={getEmptyCardMessage(filterType)}
+                    setOpenAddEditModal={() =>
+                      setOpenAddEditModal({
+                        isShown: true,
+                        type: "add",
+                        data: null,
+                      })
+                    }
                   />
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -267,7 +279,8 @@ const Home = () => {
         onRequestClose={() => {}}
         style={{
           overlay: {
-            backgroundColor: "rgba(0,0,0,0.4)",
+            backgroundColor: "rgba(243, 241, 237, 0.8)",
+            backdropFilter: "blur(12px)",
             zIndex: 999,
             display: "flex",
             alignItems: "center",
@@ -275,7 +288,7 @@ const Home = () => {
           },
         }}
         appElement={document.getElementById("root")}
-        className="w-[95vw] md:w-[60%] lg:w-[45%] h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden z-[1000] outline-none relative"
+        className="w-[95vw] md:w-[85vw] lg:w-[60vw] xl:w-[45vw] h-[92vh] bg-white rounded-[2.5rem] shadow-[0_50px_100px_rgba(0,0,0,0.1)] overflow-hidden z-[1000] outline-none relative"
       >
         <AddEditTravelStory
           storyInfo={openAddEditModal.data}
@@ -299,38 +312,42 @@ const Home = () => {
         onRequestClose={() => {}}
         style={{
           overlay: {
-            backgroundColor: "rgba(0,0,0,0.2)",
+            backgroundColor: "rgba(43, 40, 36, 0.4)",
+            backdropFilter: "blur(8px)",
             zIndex: 999,
           },
         }}
         appElement={document.getElementById("root")}
-        className="w-[80vw] md:w-[40%] h-[80vh] bg-white rounded-lg mx-auto mt-14 p-5 overflow-y-scroll scrollbar z-50"
+        className="w-[92vw] md:w-[70vw] lg:w-[45vw] h-[85vh] bg-white rounded-[2rem] mx-auto mt-10 md:mt-14 p-0 overflow-hidden shadow-2xl z-50 border border-white/20"
       >
-        <ViewTravelStory
-          storyInfo={openViewModal.data || null}
-          onClose={() => {
-            setOpenViewModal((prevState) => ({ ...prevState, isShown: false }))
-          }}
-          onEditClick={() => {
-            setOpenViewModal((prevState) => ({ ...prevState, isShown: false }))
-            handleEdit(openViewModal.data || null)
-          }}
-          onDeleteClick={() => {
-            deleteTravelStory(openViewModal.data || null)
-          }}
-        />
+        <div className="h-full overflow-y-auto scrollbar-hide">
+          <ViewTravelStory
+            storyInfo={openViewModal.data || null}
+            onClose={() => {
+              setOpenViewModal((prevState) => ({ ...prevState, isShown: false }))
+            }}
+            onEditClick={() => {
+              setOpenViewModal((prevState) => ({ ...prevState, isShown: false }))
+              handleEdit(openViewModal.data || null)
+            }}
+            onDeleteClick={() => {
+              deleteTravelStory(openViewModal.data || null)
+            }}
+          />
+        </div>
       </Modal>
 
       <motion.button
         whileHover={{ scale: 1.1, rotate: 90 }}
         whileTap={{ scale: 0.9 }}
-        className="w-16 h-16 flex items-center justify-center rounded-full bg-[#b27d7d] hover:bg-[#a16c6c] shadow-[0_15px_30px_rgba(178,125,125,0.3)] fixed right-10 bottom-10 z-50 transition-colors"
+        className="w-14 h-14 md:w-16 md:h-16 flex items-center justify-center rounded-2xl md:rounded-full bg-stone-800 hover:bg-black shadow-[0_20px_40px_rgba(0,0,0,0.2)] fixed right-6 bottom-6 md:right-10 md:bottom-10 z-[60] transition-all"
         onClick={() => {
           setOpenAddEditModal({ isShown: true, type: "add", data: null })
         }}
       >
-        <IoMdAdd className="text-[32px] text-white" />
+        <IoMdAdd className="text-[28px] md:text-[32px] text-white" />
       </motion.button>
+
 
       <ToastContainer />
     </div>

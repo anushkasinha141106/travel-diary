@@ -91,7 +91,10 @@ app.get("*", (req, res) => {
   }
 })
 
+// Global error handler
 app.use((err, req, res, next) => {
+  console.error("🔥 SYSTEM ERROR:", err.message)
+  console.error(err.stack) // This will show the exact line in your Render logs
   const statusCode = err.statusCode || 500
   const message = err.message || "Internal Server Error"
   res.status(statusCode).json({ success: false, statusCode, message })

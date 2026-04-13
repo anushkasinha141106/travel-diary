@@ -1,6 +1,7 @@
 import { fileURLToPath } from "url"
 import TravelStory from "../models/travelStory.model.js"
 import { errorHandler } from "../utils/error.js"
+import { cloudinary } from "../multer.js"
 import path from "path"
 import fs from "fs"
 
@@ -61,7 +62,8 @@ export const imageUpload = async (req, res, next) => {
       return next(errorHandler(400, "No image uploaded"))
     }
 
-    const imageUrl = `/uploads/${req.file.filename}`
+    // Cloudinary returns the full URL in req.file.path
+    const imageUrl = req.file.path
 
     res.status(201).json({ imageUrl })
   } catch (error) {
@@ -82,21 +84,25 @@ export const deleteImage = async (req, res, next) => {
   }
 
   try {
-    // extract the file name from the imageUrl
-    const filename = path.basename(imageUrl)
+    if (imageUrl.includes("cloudinary.com")) {
+      // Extract public_id from Cloudinary URL
+      // Format: https://res.cloudinary.com/cloud_name/image/upload/v12345/folder/public_id.jpg
+      const parts = imageUrl.split("/")
+      const filename = parts[parts.length - 1].split(".")[0]
+      const folder = "travel-stories" // Should match the folder in multer.js
+      const publicId = `${folder}/${filename}`
 
-    // Delete the file path
-    const filePath = path.join(rootDir, "uploads", filename)
-
-    console.log(filePath)
-
-    // check if the file exists
-    if (!fs.existsSync(filePath)) {
-      return next(errorHandler(404, "Image not found!"))
+      await cloudinary.uploader.destroy(publicId)
+      return res.status(200).json({ message: "Cloudinary image deleted successfully!" })
     }
 
-    // delete the file
-    await fs.promises.unlink(filePath)
+    // Legacy local file deletion logic
+    const filename = path.basename(imageUrl)
+    const filePath = path.join(rootDir, "uploads", filename)
+
+    if (fs.existsSync(filePath)) {
+      await fs.promises.unlink(filePath)
+    }
 
     res.status(200).json({ message: "Image deleted successfully!" })
   } catch (error) {
@@ -167,14 +173,22 @@ export const deleteTravelStory = async (req, res, next) => {
     const imageUrl = travelStory.imageUrl
 
     if (imageUrl && imageUrl !== placeholderImageUrl) {
-      // Extract the filename from the image url
-      const filename = path.basename(imageUrl)
-      const filePath = path.join(rootDir, "uploads", filename)
+      if (imageUrl.includes("cloudinary.com")) {
+        const parts = imageUrl.split("/")
+        const filename = parts[parts.length - 1].split(".")[0]
+        const folder = "travel-stories"
+        const publicId = `${folder}/${filename}`
+        await cloudinary.uploader.destroy(publicId)
+      } else {
+        // Extract the filename from the image url
+        const filename = path.basename(imageUrl)
+        const filePath = path.join(rootDir, "uploads", filename)
 
-      // Check if the file exists before deleting
-      if (fs.existsSync(filePath)) {
-        // delete the file
-        await fs.promises.unlink(filePath) // delete the file asynchronously
+        // Check if the file exists before deleting
+        if (fs.existsSync(filePath)) {
+          // delete the file
+          await fs.promises.unlink(filePath) // delete the file asynchronously
+        }
       }
     }
 

@@ -106,140 +106,167 @@ const Login = () => {
   }, [currentUser, loading, navigate])
 
   return (
-    <div className="relative w-full h-[100vh] bg-[#ebe7e0] overflow-hidden flex items-center justify-center font-sans tracking-wide">
+    <div className="relative w-full h-screen bg-[#ebe7e0] overflow-hidden flex items-center justify-center font-sans tracking-wide">
       
-      {/* Beige Metallic Wire Grid (Image 2 style adjusted) */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.35]"
+      {/* Background Texture & Grid */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-[0.2]"
         style={{
-          backgroundImage: 'linear-gradient(#968f81 2px, transparent 2px), linear-gradient(90deg, #968f81 2px, transparent 2px)',
-          backgroundSize: '100px 100px'
+          backgroundImage: 'linear-gradient(#968f81 1.5px, transparent 1.5px), linear-gradient(90deg, #968f81 1.5px, transparent 1.5px)',
+          backgroundSize: '60px 60px'
         }}
       />
       
-      {/* Soft Vignette overlay (white walls fading out) */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(235,231,224,0.95)_80%)] z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(235,231,224,0.95)_90%)] z-10 pointer-events-none" />
 
-      {/* 3D Polaroids Grid */}
+      {/* Dynamic Memory Cloud (Scatter Layout) */}
       <motion.div 
-        className="relative z-20 grid grid-cols-5 grid-rows-3 gap-8 w-[160vw] md:w-[120vw] lg:w-[130vw] h-[160vh] md:h-[130vh] -top-5"
+        className="absolute inset-0 z-20 overflow-visible"
         variants={gridVariants}
         initial="hidden"
         animate="visible"
       >
-        {polaroids.map((pic) => {
+        {polaroids.map((pic, i) => {
           const isHovered = hoveredId === pic.id;
           const isAnyHovered = hoveredId !== null;
           
+          // Calculate radial positions to avoid the center form
+          // 15 images. Let's place them in 2 rings.
+          const angle = (i / 15) * Math.PI * 2;
+          const radius = i < 7 ? 32 : 48; // Two rings: inner (smaller) and outer (larger)
+          const rx = Math.cos(angle) * radius + (Math.random() - 0.5) * 5;
+          const ry = Math.sin(angle) * (radius * 0.8) + (Math.random() - 0.5) * 5;
+
           return (
             <motion.div
               key={pic.id}
-              variants={itemVariants}
               onHoverStart={() => setHoveredId(pic.id)}
               onHoverEnd={() => setHoveredId(null)}
-              className="relative cursor-pointer group flex items-center justify-center w-full h-full"
-              animate={{
-                scale: isHovered ? 1.6 : (isAnyHovered ? 0.9 : 1),
-                opacity: isHovered ? 1 : (isAnyHovered ? 0.5 : 0.9),
-                rotateZ: isHovered ? 0 : pic.rot,
-                x: isHovered ? 0 : pic.x,
-                y: isHovered ? 0 : pic.y,
-                zIndex: isHovered ? 40 : 1,
-                filter: isHovered ? "blur(0px) drop-shadow(0 35px 35px rgba(0,0,0,0.4))" : (isAnyHovered ? "blur(4px) brightness(0.9)" : "blur(0px) drop-shadow(0 15px 15px rgba(0,0,0,0.08))"),
+              className="absolute cursor-pointer group flex items-center justify-center"
+              style={{
+                left: `${50 + rx}%`,
+                top: `${50 + ry}%`,
+                width: '180px',
+                height: '220px',
               }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
+              animate={{
+                scale: isHovered ? 1.5 : (isAnyHovered ? 0.85 : 1),
+                opacity: isHovered ? 1 : (isAnyHovered ? 0.3 : 0.8),
+                rotateZ: isHovered ? 0 : pic.rot,
+                zIndex: isHovered ? 100 : 1,
+                filter: isHovered ? "blur(0px) drop-shadow(0 20px 40px rgba(0,0,0,0.3))" : "blur(0px)",
+                x: "-50%",
+                y: "-50%",
+              }}
+              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             >
-              {/* White Polaroid Frame */}
-              <div className="relative p-3 pb-12 bg-white rounded-sm w-[75%] max-w-[220px] h-full max-h-[260px] flex shadow-inner border border-[#d6d0c4]">
-                
-                {/* Wooden Peg / Clip element */}
-                <div className="absolute -top-[12px] left-1/2 -translate-x-1/2 w-8 h-6 bg-[#b1a491] shadow-sm border-b-[2px] border-[#928676] rounded-t-[2px] z-10 flex items-center justify-center transform -rotate-2">
-                  <div className="w-2 h-2 rounded-full bg-black/30 shadow-inner" />
-                </div>
-                
-                {/* Polaroid Image */}
-                <div className="w-full h-full overflow-hidden bg-[#e0dbd3] group-hover:bg-[#d4cdbz]">
+              <div className="relative p-2 pb-10 bg-white rounded-sm w-full h-full shadow-lg border border-[#d6d0c4]">
+                <div className="absolute -top-[8px] left-1/2 -translate-x-1/2 w-6 h-4 bg-[#b1a491] rounded-t-[1px] z-10 opacity-60" />
+                <div className="w-full h-full overflow-hidden bg-[#e0dbd3]">
                   <img 
-                    // src=
                     src={pic.imgUrl}
                     alt="Memory"
-                    className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110"
+                    className="w-full h-full object-cover grayscale-[0.05] contrast-[1.05]"
                   />
                 </div>
               </div>
-
             </motion.div>
           )
         })}
       </motion.div>
 
-      {/* Glassmorphic Login Form in center (pointer-events-none wrapped allows clicking on stuff outside!) */}
-      <div className={`absolute z-30 inset-0 flex items-center justify-center pointer-events-none transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${hoveredId !== null ? 'opacity-0 scale-95 blur-sm' : 'opacity-100 scale-100 blur-0'}`}>
+      {/* Glassmorphic Login Form */}
+      <div className={`absolute z-40 inset-0 flex items-center justify-center pointer-events-none transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)] ${hoveredId !== null ? 'opacity-0 scale-90 blur-xl' : 'opacity-100 scale-100 blur-0'}`}>
         
-        {/* Actual Form Box (pointer-events-auto makes it interactive) */}
-        <div className="flex flex-col md:flex-row shadow-[0_20px_60px_rgba(0,0,0,0.1)] rounded-3xl overflow-hidden bg-white/20 backdrop-blur-2xl border border-white/50 max-w-[850px] w-[90%] md:w-[75%] h-auto z-50 pointer-events-auto mix-blend-luminosity">
+        <div className="flex flex-col md:flex-row shadow-[0_40px_100px_rgba(0,0,0,0.12)] rounded-[3rem] overflow-hidden bg-white/40 backdrop-blur-3xl border border-white/60 max-w-[880px] w-[94%] h-auto md:h-[560px] z-50 pointer-events-auto relative">
           
-          {/* Left Text/Branding Panel (Passes mouse events straight through to the 3D grid!) */}
-          <div className="hidden md:flex flex-col justify-center p-12 bg-white/10 w-1/2 relative overflow-hidden backdrop-blur-md border-r border-white/20">
-             <div className="relative z-10 text-stone-900">
-                <h4 className="text-[2.6rem] leading-[1.05] mb-4 tracking-tight" style={{ fontFamily: '"Playfair Display", serif' }}>
-                  <span className="font-extrabold uppercase text-[2.8rem]">RELIVE YOUR</span><br/>
-                  <span className="font-normal text-[#8e826b]">MEMORIES WITH US</span><br/>
-                  <span className="font-bold tracking-widest text-[2rem] text-black">TRAVEL JOURNAL.</span>
-                </h4>
-                <p className="text-stone-700 text-sm leading-relaxed mt-5 font-semibold tracking-wide border-t border-stone-800/10 pt-4">
-                  Record your travel experiences and memories in your private journey. Every picture tells your story!
-                </p>
-             </div>
+          {/* Subtle 'Peek' Hotspot (Invisible area to hover that also fades the form) */}
+          <div 
+            className="absolute top-0 right-0 w-12 h-12 z-[60] cursor-help flex items-center justify-center group/peek"
+            onMouseEnter={() => setHoveredId('peek')}
+            onMouseLeave={() => setHoveredId(null)}
+          >
+            <div className="w-1.5 h-1.5 rounded-full bg-stone-300 group-hover/peek:scale-[10] group-hover/peek:bg-stone-100 transition-all duration-500" />
           </div>
 
-          {/* Right Form Component (pointer-events-auto restores clicks specifically here so typing is safe) */}
-          <div className="w-full md:w-1/2 p-10 md:p-14 bg-white/30 backdrop-blur-xl pointer-events-auto">
-            <form onSubmit={handleSubmit} className="flex flex-col flex-1 h-full justify-center">
-              <h4 className="text-3xl font-bold mb-8 text-stone-800 tracking-tight">Welcome Back</h4>
-
-              <input
-                type="email"
-                placeholder="Email Address"
-                className="input-box bg-white/40 border border-stone-300 shadow-sm mb-4 text-stone-800 placeholder-stone-500 rounded-md focus:bg-white/60 transition-colors"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-
-              <PasswordInput
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-
-              {error && <p className="text-red-600 text-sm font-medium pt-2 pb-1">{error}</p>}
-
-              {loading ? (
-                <p className="animate-pulse w-full text-center py-3 bg-stone-500 text-white rounded-md mt-4 font-semibold tracking-wide shadow-lg">
-                  VERIFYING...
+          {/* Left Panel */}
+          <div className="hidden md:flex flex-col justify-center p-14 bg-black/5 w-5/12 relative overflow-hidden border-r border-stone-200/20 select-none">
+             <div className="relative z-10 text-stone-900">
+                <h4 className="text-[2.6rem] leading-[0.95] mb-8 tracking-tighter" style={{ fontFamily: '"Playfair Display", serif' }}>
+                  <span className="font-black uppercase block opacity-90">Chronicle</span>
+                  <span className="font-extralight italic text-[#8e826b] block mt-1">Your Path</span>
+                  <span className="font-bold tracking-[0.15em] text-[1.2rem] text-stone-500 block mt-4 border-t border-stone-800/5 pt-4">JOURNAL</span>
+                </h4>
+                <p className="text-stone-600 text-xs leading-relaxed mt-6 font-medium italic opacity-70">
+                  "We travel not to escape life, but for life not to escape us."
                 </p>
-              ) : (
-                <button type="submit" className="w-full py-3 bg-stone-800 hover:bg-stone-900 transition-colors text-white rounded-md mt-4 font-semibold tracking-wider hover:shadow-xl hover:-translate-y-[1px] transform duration-200">
-                  LOGIN
-                </button>
+             </div>
+             <div className="absolute -bottom-10 -left-10 w-48 h-48 rounded-full bg-stone-200/20 blur-3xl" />
+          </div>
+
+          {/* Right Panel - Form */}
+          <div className="w-full md:w-7/12 p-8 md:p-14 bg-white/20">
+            <form onSubmit={handleSubmit} className="flex flex-col h-full justify-center">
+              <div className="mb-10 text-center md:text-left">
+                <h4 className="text-4xl font-black text-stone-800 tracking-tighter">Welcome</h4>
+                <p className="text-stone-500 text-sm mt-2 font-medium tracking-tight">Preserve your adventures today.</p>
+              </div>
+
+              <div className="space-y-5">
+                <div className="space-y-2">
+                  <input
+                    type="email"
+                    placeholder="Email Address"
+                    className="w-full py-4 px-6 bg-white/80 border border-stone-200/60 focus:border-stone-400 focus:bg-white rounded-2xl outline-none transition-all shadow-sm text-stone-800 placeholder:text-stone-400 font-medium"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <PasswordInput
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {error && (
+                <motion.p 
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-red-500 text-xs font-bold mt-4 bg-red-50 px-4 py-3 rounded-xl border border-red-100 text-center uppercase tracking-wide"
+                >
+                  {error}
+                </motion.p>
               )}
 
-              <div className="flex items-center justify-center my-6">
-                <div className="h-[1px] bg-stone-300 w-full" />
-                <p className="text-xs text-stone-500 px-3 uppercase font-semibold mx-2 whitespace-nowrap">Or</p>
-                <div className="h-[1px] bg-stone-300 w-full" />
+              <button 
+                type="submit" 
+                disabled={loading}
+                className="w-full py-4 bg-stone-800 hover:bg-stone-900 text-white rounded-2xl mt-10 font-black tracking-[0.2em] text-[10px] transition-all hover:shadow-2xl active:scale-[0.98] disabled:opacity-50"
+              >
+                {loading ? "VERIFYING..." : "ENTER JOURNAL"}
+              </button>
+
+              <div className="relative flex items-center justify-center my-10 px-4">
+                <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-stone-200/50"></div></div>
+                <span className="relative px-4 bg-[#fcfbf9]/0 text-[9px] uppercase font-black text-stone-400 tracking-widest whitespace-nowrap">Explore more?</span>
               </div>
 
               <button
                 type="button"
-                className="w-full py-3 bg-transparent border-2 border-stone-400 text-stone-700 hover:bg-stone-100/50 hover:border-stone-500 transition-colors rounded-md font-semibold tracking-wider shadow-sm"
+                className="w-full py-4 text-stone-500 hover:text-stone-800 transition-all font-black tracking-[0.2em] text-[10px] bg-stone-100/50 hover:bg-stone-100 flex items-center justify-center gap-3 rounded-2xl border border-stone-200/40"
                 onClick={() => navigate("/sign-up")}
               >
-                CREATE ACCOUNT
+                CREATE AN ACCOUNT
               </button>
             </form>
           </div>
         </div>
       </div>
     </div>
+
+
   )
 }
 

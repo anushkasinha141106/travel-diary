@@ -3,6 +3,7 @@ import { IoMdClose } from "react-icons/io"
 import { MdOutlineDelete, MdOutlineUpdate } from "react-icons/md"
 import moment from "moment"
 import { FaLocationDot } from "react-icons/fa6"
+import BASE_URL from "../../config"
 
 const ViewTravelStory = ({
   storyInfo,
@@ -56,26 +57,26 @@ const ViewTravelStory = ({
           </div>
         </div>
 
-      <div className="relative overflow-hidden rounded-lg">
+      <div className="relative overflow-hidden md:rounded-2xl">
         <img
-          src={storyInfo && storyInfo.imageUrl}
+          src={storyInfo && (storyInfo.imageUrl?.startsWith("http") ? storyInfo.imageUrl : `${BASE_URL}${storyInfo.imageUrl}`)}
           alt="story image"
-          className="w-full h-[300px] object-cover"
+          className="w-full h-[250px] md:h-[400px] object-cover"
         />
 
         {/* Decorative Charm Sticker Over Image */}
         {storyInfo && storyInfo.charm && (
           <div
-            className="absolute bg-white/80 backdrop-blur-sm p-1 rounded-full shadow-lg border border-cyan-100 z-10 transition-transform hover:scale-110"
+            className="absolute bg-white/80 backdrop-blur-sm p-1.5 rounded-full shadow-lg border border-white/50 z-10 transition-transform hover:scale-110"
             style={{
               left: `${storyInfo.charmPosition?.x || 0}px`,
               top: `${storyInfo.charmPosition?.y || 0}px`,
             }}
           >
             <img
-              src={storyInfo.charm}
+              src={storyInfo.charm?.startsWith("http") ? storyInfo.charm : `${BASE_URL}${storyInfo.charm}`}
               alt="charm"
-              className="w-12 h-12 object-contain"
+              className="w-10 h-10 md:w-14 md:h-14 object-contain"
             />
           </div>
         )}

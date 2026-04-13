@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { BsUpload } from "react-icons/bs"
 import { MdDeleteOutline } from "react-icons/md"
 import { motion } from "framer-motion"
+import BASE_URL from "../config"
 
 const ImageSelector = ({
   image,
@@ -34,7 +35,8 @@ const ImageSelector = ({
   useEffect(() => {
     // if the image prop is a string(url), set it as the preview URL
     if (typeof image === "string") {
-      setPreviewUrl(image)
+      const fullUrl = image.startsWith("http") ? image : `${BASE_URL}${image}`;
+      setPreviewUrl(fullUrl)
     } else if (image) {
       setPreviewUrl(URL.createObjectURL(image))
     } else {
@@ -42,11 +44,14 @@ const ImageSelector = ({
     }
 
     return () => {
-      if (previewUrl && typeof previewUrl === "string" && !image) {
+      if (previewUrl && typeof previewUrl === "string" && !image && !previewUrl.startsWith("http") && !image?.startsWith?.("/uploads")) {
         URL.revokeObjectURL(previewUrl)
       }
     }
   }, [image])
+
+  // Get absolute charm URL
+  const fullCharmUrl = charm?.startsWith("http") ? charm : `${BASE_URL}${charm}`;
 
   return (
     <div>
@@ -95,7 +100,7 @@ const ImageSelector = ({
             >
               <div className="bg-white/70 backdrop-blur-sm p-1 rounded-full shadow-lg border border-white/50">
                 <img
-                  src={charm}
+                  src={fullCharmUrl}
                   alt="Sticker"
                   className="w-16 h-16 object-contain pointer-events-none"
                 />

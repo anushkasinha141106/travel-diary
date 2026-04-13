@@ -1,23 +1,28 @@
 import multer from "multer"
-import path from "path"
-import fs from "fs"
-import { fileURLToPath } from "url"
+import { v2 as cloudinary } from "cloudinary"
+import { CloudinaryStorage } from "multer-storage-cloudinary"
+import dotenv from "dotenv"
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
+dotenv.config()
 
-// storage configuration
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadPath = path.join(__dirname, "uploads")
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true })
-    }
-    cb(null, uploadPath)
-  },
+// Cloudinary Configuration
+if (!process.env.CLOUDINARY_CLOUD_NAME) {
+  console.error("❌ CLOUDINARY ERROR: Missing Cloudinary environment variables in .env or Hosting Dashboard!")
+}
 
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)) //unique file name
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+})
+
+// Cloudinary Storage configuration
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "travel-stories",
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
+    transformation: [{ width: 1200, crop: "limit" }], // Quality optimization
   },
 })
 
@@ -31,6 +36,13 @@ const fileFilter = (req, file, cb) => {
 }
 
 // Initialize multer instance
-const upload = multer({ storage, fileFilter })
+const upload = multer({ 
+  storage, 
+  fileFilter,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB (Cloudinary handles it better)
+  }
+})
 
+export { cloudinary }
 export default upload
