@@ -52,10 +52,16 @@ if (fs.existsSync(frontendPath)) {
   console.warn(`WARNING: Frontend dist folder NOT found at: ${frontendPath}`)
 }
 
-// Enable CORS: Be permissive in production if FRONTEND_URL is missing
-const allowedOrigins = process.env.FRONTEND_URL 
-  ? [process.env.FRONTEND_URL] 
-  : ["http://localhost:5173", "http://localhost:3000"]
+app.use(cookieParser())
+app.use(express.json())
+
+// Enable CORS: Use BASE_URL from .env as the frontend origin
+const allowedOrigins = [
+  process.env.BASE_URL,
+  process.env.FRONTEND_URL,
+  "http://localhost:5173",
+  "http://localhost:3000",
+].filter(Boolean)
 
 app.use(
   cors({
@@ -63,21 +69,26 @@ app.use(
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true)
       } else {
-        callback(null, true) // Be permissive to avoid CORS blocking deployment
+        callback(null, true) // Permissive for production debugging
       }
     },
     credentials: true,
   })
 )
 
-app.use(cookieParser())
-app.use(express.json())
-
-const PORT = process.env.PORT || 3000
-
+// API ROUTES (Must be ABOVE static files for clarity)
 app.use("/api/auth", authRoutes)
 app.use("/api/user", userRoutes)
 app.use("/api/travel-story", travelStoryRoutes)
+
+// STATIC ASSETS
+app.use("/uploads", express.static(uploadsPath))
+app.use("/assets", express.static(assetsPath))
+
+const frontendPath = path.resolve(__dirname, "../frontend/dist")
+if (fs.existsSync(frontendPath)) {
+  app.use(express.static(frontendPath))
+}
 
 // Catch-all (must be the VERY bottom)
 app.get("*", (req, res) => {
@@ -87,9 +98,9 @@ app.get("*", (req, res) => {
   } else {
     // If we're hitting an API route that's missing, or front is missing
     if (req.path.startsWith("/api")) {
-      res.status(404).json({ success: false, message: "API endpoint not found" })
+      res.status(404).json({ success: false, message: "API endpoint not found on server" })
     } else {
-      res.status(404).send("Application is starting up or dist folder is missing. Please wait a moment.")
+      res.status(404).send("Application is starting up or build folder is missing.")
     }
   }
 })
