@@ -15,15 +15,16 @@ import travelStoryRoutes from "./routes/travelStory.route.js"
 const PORT = process.env.PORT || 3000
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI, {
+    serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of hanging forever
+    connectTimeoutMS: 10000,
+  })
   .then(() => {
-    console.log("Successfully connected to MongoDB.")
+    console.log("✅ Successfully connected to MongoDB.")
   })
   .catch((err) => {
-    console.error("CRITICAL: MongoDB connection error!")
+    console.error("❌ CRITICAL: MongoDB connection error!")
     console.error(err)
-    // Don't exit here, might be a temporary network issue, 
-    // but log it clearly so the user knows why auth fails.
   })
 
 const app = express()
@@ -54,12 +55,19 @@ app.use(express.json())
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow all origins for the moment to get you unblocked in production
+      // Allow ALL origins to stop CORS errors on Vercel/local/Render
       callback(null, true)
     },
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
   })
 )
+
+// Health Check
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", time: new Date().toISOString(), mongo: mongoose.connection.readyState === 1 ? "connected" : "disconnected" })
+})
 
 // API ROUTES
 app.use("/api/auth", authRoutes)
