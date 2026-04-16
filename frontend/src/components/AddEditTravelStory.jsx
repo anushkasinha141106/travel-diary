@@ -34,11 +34,11 @@ const AddEditTravelStory = ({
   )
 
   const stickerOptions = [
-    { url: "/assets/stickers/guitar.png", label: "Guitar" },
-    { url: "/assets/stickers/disco.png", label: "Disco" },
-    { url: "/assets/stickers/clapboard.png", label: "Clapboard" },
-    { url: "/assets/stickers/vinyl.png", label: "Vinyl" },
-    { url: "/assets/stickers/sunflowers.png", label: "Sunflowers" }
+    { url: "https://travel-diary-backend-pxxy.onrender.com/assets/stickers/guitar.png", label: "Guitar" },
+    { url: "https://travel-diary-backend-pxxy.onrender.com/assets/stickers/disco.png", label: "Disco" },
+    { url: "https://travel-diary-backend-pxxy.onrender.com/assets/stickers/clapboard.png", label: "Clapboard" },
+    { url: "https://travel-diary-backend-pxxy.onrender.com/assets/stickers/vinyl.png", label: "Vinyl" },
+    { url: "https://travel-diary-backend-pxxy.onrender.com/assets/stickers/sunflowers.png", label: "Sunflowers" }
   ];
 
   const addNewTravelStory = async () => {
