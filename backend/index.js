@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3000
 
 mongoose
   .connect(process.env.MONGO_URI, {
-    serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of hanging forever
+    serverSelectionTimeoutMS: 5000,
     connectTimeoutMS: 10000,
   })
   .then(() => {
@@ -32,41 +32,43 @@ const app = express()
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// Diagnostic logging for storage paths
 const uploadsPath = path.join(__dirname, "uploads")
 const assetsPath = path.join(__dirname, "assets")
 
-// Create uploads directory if it doesn't exist (CRITICAL for Render)
 if (!fs.existsSync(uploadsPath)) {
   fs.mkdirSync(uploadsPath, { recursive: true })
   console.log("Created uploads directory at:", uploadsPath)
 }
 
-app.use("/uploads", express.static(uploadsPath))
-app.use("/assets", express.static(assetsPath))
-
-// The static middleware will be handled later, after API routes, 
-// to ensure API routes take precedence and catch-all works for the SPA.
-
+// MIDDLEWARE - Order matters!
 app.use(cookieParser())
 app.use(express.json())
 
-// Enable CORS: Be permissive for local dev and production
+// CORS - UPDATED to allow your Vercel frontend
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow ALL origins to stop CORS errors on Vercel/local/Render
-      callback(null, true)
-    },
+    origin: [
+      "http://localhost:5173",
+      "http://localhost:5174",
+      "https://frontend-travel-diary.vercel.app"
+    ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
   })
 )
 
+// Static files
+app.use("/uploads", express.static(uploadsPath))
+app.use("/assets", express.static(assetsPath))
+
 // Health Check
 app.get("/api/health", (req, res) => {
-  res.json({ status: "ok", time: new Date().toISOString(), mongo: mongoose.connection.readyState === 1 ? "connected" : "disconnected" })
+  res.json({ 
+    status: "ok", 
+    time: new Date().toISOString(), 
+    mongo: mongoose.connection.readyState === 1 ? "connected" : "disconnected" 
+  })
 })
 
 // API ROUTES
@@ -74,36 +76,10 @@ app.use("/api/auth", authRoutes)
 app.use("/api/user", userRoutes)
 app.use("/api/travel-story", travelStoryRoutes)
 
-// STATIC ASSETS & FRONTEND
-const _frontendPath = path.resolve(__dirname, "../frontend/dist")
-
-// Check if frontend build exists, if not, try current directory (in case of flat deployment)
-const effectiveFrontendPath = fs.existsSync(_frontendPath) 
-  ? _frontendPath 
-  : path.resolve(__dirname, "dist");
-
-app.use(express.static(effectiveFrontendPath))
-
-// Catch-all (must be the VERY bottom)
-app.get("*", (req, res) => {
-  const indexPath = path.join(effectiveFrontendPath, "index.html")
-  if (fs.existsSync(indexPath)) {
-    res.sendFile(indexPath)
-  } else {
-    // Basic fallback if dist is missing
-    if (req.path.startsWith("/api")) {
-      res.status(404).json({ success: false, message: "API endpoint not found" })
-    } else {
-      console.error(`ERROR: Frontend not found at ${indexPath}. Current directory: ${process.cwd()}`)
-      res.status(404).send("Frontend dist folder not found. Please ensure the frontend is built.")
-    }
-  }
-})
-
 // Global error handler
 app.use((err, req, res, next) => {
   console.error("🔥 SYSTEM ERROR:", err.message)
-  console.error(err.stack) // This will show the exact line in your Render logs
+  console.error(err.stack)
   const statusCode = err.statusCode || 500
   const message = err.message || "Internal Server Error"
   res.status(statusCode).json({ success: false, statusCode, message })
@@ -111,4 +87,5 @@ app.use((err, req, res, next) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`)
+  console.log(`Environment: ${process.env.NODE_ENV || "development"}`)
 })
