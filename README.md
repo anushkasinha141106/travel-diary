@@ -1,68 +1,178 @@
-# Travel Journal - Full-Stack Memory Management Application
+# Travel Diary Application
+[https://travel-diary-frontend-gamma.vercel.app](https://travel-diary-frontend-gamma.vercel.app)
 
-A robust full-stack web application designed for personal travel documentation. The project implements a secure, scalable architecture using the MERN stack (MongoDB, Express, React, Node.js) with a focus on portable asset management and state-of-the-art UI/UX patterns.
+A modern full-stack travel journaling platform where users can document, organize, and personalize their travel experiences with an interactive and visually rich interface.
 
-## Technical Stack
+## Live Demo
 
-*   **Frontend**: React 19, Tailwind CSS, Framer Motion (for physics-based animations), Redux Toolkit (state management), Axios.
-*   **Backend**: Node.js, Express.js.
-*   **Database**: MongoDB Atlas (NoSQL).
-*   **Authentication**: JWT (JSON Web Tokens) with secure HTTP-only cookie storage, Bcryptjs for password hashing.
-*   **File Handling**: Multer for disk storage and multipart/form-data processing.
-
-## Key Features
-
-*   **Secure Authentication**: Comprehensive login and signup flows with encrypted session management.
-*   **Portable Asset Management**: Implementation of relative pathing for uploaded assets, ensuring cross-environment compatibility (Local vs Production).
-*   **Dynamic Story Management**: Full CRUD operations for travel stories, including location tagging and image integration.
-*   **Interactive UI Components**: Responsive design with glassmorphic elements and high-performance animations.
-*   **Custom Filtering**: Real-time search and date-range filtering for efficient data retrieval.
-
-## Project Structure
-
-```text
-├── backend/            # Express server, controllers, routes, and models
-├── frontend/           # React application (Vite-based)
-├── package.json        # Root scripts for unified build/start
-```
-
-## Installation and Setup
-
-### 1. Clone the repository
-```bash
-git clone https://github.com/username/travel-diary.git
-cd travel-diary-main
-```
-
-### 2. Configure Environment Variables
-Create a `.env` file in the `backend/` directory:
-```env
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_signing_key
-NODE_ENV=production
-```
-
-### 3. Build and Run
-The project uses a unified script to manage both tiers:
-```bash
-# Install all dependencies and build frontend
-npm install
-npm run build
-
-# Start the application
-npm start
-```
-
-## Deployment Specifications (Render)
-
-The application is optimized for a Single-Service model on Render.
-
-*   **Root Directory**: Leave empty.
-*   **Build Command**: `npm run build`
-*   **Start Command**: `npm start`
-*   **Environment Variables**: Ensure `MONGO_URI`, `JWT_SECRET`, and `NODE_ENV=production` are set in the dashboard.
+Frontend: [https://travel-diary-frontend-gamma.vercel.app](https://travel-diary-frontend-gamma.vercel.app)
+Backend: [https://travel-diary-backend-pxxy.onrender.com](https://travel-diary-backend-pxxy.onrender.com)
 
 ---
 
-## Developer
-Anushka
+## Overview
+
+Travel Diary allows users to create beautiful travel memories with images, visited locations, custom decorative stickers, and story details — all inside a sleek glassmorphic user interface.
+
+Users can securely create an account, log in, upload travel stories, edit existing entries, and manage their personal travel collection.
+
+---
+
+## Features
+
+### Authentication
+
+* User signup and login
+* Secure authentication flow
+* Persistent login state
+* Sign out functionality
+
+### Travel Story Management
+
+* Create new travel stories
+* Edit existing stories
+* Delete travel stories
+* View all saved travel stories
+* Search and filter stories
+* View story details in a clean card-based layout
+
+### Story Customization
+
+* Add a title and description for each story
+* Add visited locations using location tags
+* Personalize stories with decorative stickers
+* Drag and position stickers interactively on images
+* Add dates to memories
+* Upload and display custom cover images
+
+### Media Handling
+
+* Image upload support
+* Cloudinary integration for storing uploaded images
+* Optimized cloud image delivery
+* Support for custom image previews
+
+### UI / UX
+
+* Modern glassmorphic interface
+* Responsive design for desktop and mobile
+* Interactive cards and modals
+* Smooth user experience with clean navigation
+* Decorative sticker system for personalization
+* Attractive travel memory layout
+
+---
+
+## Tech Stack
+
+### Frontend
+
+* React
+* Vite
+* Redux Toolkit
+* Axios
+* Tailwind CSS
+
+### Backend
+
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
+* JWT Authentication
+* Cookie Parser
+* Multer
+* Cloudinary
+
+### Deployment
+
+* Frontend hosted on Vercel
+* Backend hosted on Render
+* Database hosted on MongoDB Atlas
+
+---
+
+## Folder Structure
+
+```bash
+frontend/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   ├── redux/
+│   ├── utils/
+│   └── assets/
+
+backend/
+├── controllers/
+├── routes/
+├── models/
+├── middleware/
+├── utils/
+└── uploads/
+```
+
+---
+
+## Environment Variables
+
+### Frontend
+
+```env
+VITE_API_URL=https://your-backend-url/api
+```
+
+### Backend
+
+```env
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+CLIENT_URL=https://your-frontend-url
+```
+
+---
+
+## Installation
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/your-username/travel-diary.git
+cd travel-diary
+```
+
+### Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### Backend Setup
+
+```bash
+cd backend
+npm install
+npm run dev
+```
+
+
+## Future Improvements
+
+* Map integration for travel locations
+* "Remember When" feature to revisit past travel memories through highlights
+* Story categories and tags
+* Dark mode support
+* AI-generated travel captions
+* Multi-image galleries per story
+* Personalised home page ui similar to photobooth grid on login page
+
+---
+
+## Author
+
+Anushka Sinha
