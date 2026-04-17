@@ -14,6 +14,9 @@ const uploadImage = async (imageFile) => {
     return response.data;
   } catch (error) {
     console.error("Error uploading image", error);
+    if(error.code==="ECONNABORTED"){
+      throw new Error("Server s waking up, Please wait a minute and try again.");
+    }
     throw error;
   }
 };
