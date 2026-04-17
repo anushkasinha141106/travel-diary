@@ -27,6 +27,7 @@ const AddEditTravelStory = ({
   )
 
   const [error, setError] = useState("")
+  const [loading, setLoading]= useState(false)
   const [charm, setCharm] = useState(storyInfo?.charm || "")
 
   const [charmPosition, setCharmPosition] = useState(
@@ -42,46 +43,55 @@ const AddEditTravelStory = ({
   ];
 
   const addNewTravelStory = async () => {
-    try {
-      let imageUrl = ""
+  if (loading) return
 
-      // Upload image if present
-      if (storyImg) {
-        const imgUploadRes = await uploadImage(storyImg)
+  try {
+    setLoading(true)
 
-        imageUrl = imgUploadRes.imageUrl || ""
-      }
+    let imageUrl = ""
 
-      const response = await axiosInstance.post("/travel-story/add", {
-        title,
-        story,
-        imageUrl: imageUrl || "",
-        visitedLocation,
-        visitedDate: visitedDate
-          ? moment(visitedDate).valueOf()
-          : moment().valueOf(),
-        charm: charm || "",
-        charmPosition: charmPosition,
-      })
-
-      if (response.data && response.data.story) {
-        toast.success("Story added successfully!")
-
-        getAllTravelStories()
-
-        onClose()
-      }
-    } catch (error) {
-      console.log(error)
-      if (error.code === 'ECONNABORTED') {
-        setError("Image upload took too long. Please try a smaller image or a better connection.")
-      } else {
-        setError("An unexpected error occurred. Please try again.")
-      }
-      toast.error("Failed to add story")
+    if (storyImg) {
+      const imgUploadRes = await uploadImage(storyImg)
+      imageUrl = imgUploadRes.imageUrl || ""
     }
-  }
 
+    const response = await axiosInstance.post("/travel-story/add", {
+      title,
+      story,
+      imageUrl: imageUrl || "",
+      visitedLocation,
+      visitedDate: visitedDate
+        ? moment(visitedDate).valueOf()
+        : moment().valueOf(),
+      charm: charm || "",
+      charmPosition: charmPosition,
+    })
+
+    if (response.data && response.data.story) {
+      toast.success("Story added successfully!")
+      getAllTravelStories()
+      onClose()
+    }
+  } catch (error) {
+    console.log(error)
+
+    if (error.code === "ECONNABORTED") {
+      setError("Server is waking up. Please wait and try again.")
+    } else if (
+      error.response &&
+      error.response.data &&
+      error.response.data.message
+    ) {
+      setError(error.response.data.message)
+    } else {
+      setError("An unexpected error occurred. Please try again.")
+    }
+
+    toast.error("Failed to add story")
+  } finally {
+    setLoading(false)
+  }
+}
   const updateTravelStory = async () => {
     const storyId = storyInfo._id
 
@@ -291,10 +301,23 @@ const AddEditTravelStory = ({
           <button className="px-6 py-2 text-stone-400 hover:text-stone-800 font-bold text-xs uppercase tracking-widest transition-all" onClick={onClose}>
             Cancel
           </button>
-          <button className="flex items-center gap-2 px-8 py-3 rounded-full bg-stone-800 text-white hover:bg-stone-900 shadow-xl shadow-stone-800/20 font-bold text-sm uppercase tracking-[0.15em] transition-all" onClick={handleAddOrUpdateClick}>
-            {type === "add" ? <IoMdAdd className="text-xl" /> : <MdOutlineUpdate className="text-xl" />}
-            {type === "add" ? "Save Memory" : "Update Memory"}
-          </button>
+          <button
+  className="flex items-center gap-2 px-8 py-3 rounded-full bg-stone-800 text-white hover:bg-stone-900 shadow-xl shadow-stone-800/20 font-bold text-sm uppercase tracking-[0.15em] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+  onClick={handleAddOrUpdateClick}
+  disabled={loading}
+>
+  {type === "add" ? (
+    <IoMdAdd className="text-xl" />
+  ) : (
+    <MdOutlineUpdate className="text-xl" />
+  )}
+
+  {loading
+    ? "Uploading..."
+    : type === "add"
+    ? "Save Memory"
+    : "Update Memory"}
+        </button>
         </div>
       </div>
     </div>
