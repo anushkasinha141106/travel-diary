@@ -69,7 +69,7 @@ const AddEditTravelStory = ({
 
     if (response.data && response.data.story) {
       toast.success("Story added successfully!")
-      getAllTravelStories()
+      await getAllTravelStories()
       onClose()
     }
   } catch (error) {
@@ -130,7 +130,7 @@ const AddEditTravelStory = ({
       if (response.data && response.data.story) {
         toast.success("Story updated successfully!")
 
-        getAllTravelStories()
+        await getAllTravelStories()
 
         onClose()
       }

@@ -45,7 +45,7 @@ const TravelStoryCard = ({
 
       <div className="relative overflow-hidden bg-stone-100 rounded-[1.2rem] md:rounded-[1.5rem] flex-1 min-h-[220px] md:min-h-[260px] shadow-sm">
         <img
-          src={fullImageUrl}
+          src={`${fullImageUrl}?t=${newDate().getTime()}`}
           alt={title}
           className="w-full h-full object-cover transition-transform duration-[3s] ease-out group-hover:scale-110 group-hover:rotate-1"
         />
